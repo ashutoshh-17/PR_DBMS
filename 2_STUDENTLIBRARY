@@ -1,0 +1,134 @@
+mysql> CREATE TABLE Student (Stud_no INTEGER PRIMARY KEY, Stud_name VARCHAR(50) NOT NULL);
+Query OK, 0 rows affected (0.71 sec)
+
+mysql> CREATE TABLE Membership (Mem_no INTEGER PRIMARY KEY, Stud_no INTEGER, FOREIGN KEY (Stud_no) REFERENCES Student(Stud_no));
+Query OK, 0 rows affected (0.55 sec)
+
+mysql> CREATE TABLE Book (book_no INTEGER PRIMARY KEY, book_name VARCHAR(100) NOT NULL, author VARCHAR(100) NOT NULL);
+Query OK, 0 rows affected (0.28 sec)
+
+mysql> CREATE TABLE Iss_rec (iss_no INTEGER PRIMARY KEY, iss_date DATE, Mem_no INTEGER, book_no INTEGER, FOREIGN KEY (Mem_no) REFERENCES Membership(Mem_no), FOREIGN KEY (book_no) REFERENCES Book(book_no));
+Query OK, 0 rows affected (0.43 sec)
+
+mysql> /*Inserting Records into Student Table*/
+mysql> INSERT INTO Student (Stud_no, Stud_name) VALUES(1, 'Alice'),(2, 'Bob'),(3, 'Charlie'),(4, 'David'),(5, 'Emma'),(6, 'Frank'),(7, 'Grace'),(8, 'Henry'),(9, 'Ivy'),(10, 'Jack');
+Query OK, 10 rows affected (0.08 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into Membership Table*/
+mysql> INSERT INTO Membership (Mem_no, Stud_no) VALUES(101, 1),(102, 2),(103, 3),(104, 4),(105, 5),(106, 6),(107, 7),(108, 8),(109, 9),(110, 10);
+Query OK, 10 rows affected (0.10 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into Book table*/
+mysql> INSERT INTO Book (book_no, book_name, author) VALUES(201, 'Book1', 'Author1'),(202, 'Book2', 'Author2'),(203, 'Book3', 'Author3'),(204, 'Book4', 'Author4'),(205, 'Book5', 'Author5'),(206, 'Book6', 'Author6'),(207, 'Book7', 'CJDATE'),(208, 'Book8', 'Author8'),(209, 'Book9', 'CJDATE'),(210, 'Book10', 'Author10');
+Query OK, 10 rows affected (0.09 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into Iss_rec table*/
+mysql> INSERT INTO Iss_rec (iss_no, iss_date, Mem_no, book_no) VALUES(301, '2024-04-30', 101, 201),(302, '2024-04-30', 102, 202),(303, '2024-04-30', 103, 203),(304, '2024-04-30', 104, 204),(305, '2024-04-30', 105, 205),(306, '2024-04-30', 106, 206),(307, '2024-04-30', 107, 207),(308, '2024-04-30', 108, 208),(309, '2024-04-30', 109, 209),(310, '2024-04-30', 110, 210);
+Query OK, 10 rows affected (0.07 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT s.Stud_name, m.Mem_no
+    -> FROM Student s
+    -> INNER JOIN Membership m ON s.Stud_no = m.Stud_no;
++-----------+--------+
+| Stud_name | Mem_no |
++-----------+--------+
+| Alice     |    101 |
+| Bob       |    102 |
+| Charlie   |    103 |
+| David     |    104 |
+| Emma      |    105 |
+| Frank     |    106 |
+| Grace     |    107 |
+| Henry     |    108 |
+| Ivy       |    109 |
+| Jack      |    110 |
++-----------+--------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT s.Stud_name, b.book_name
+    -> FROM Student s
+    -> INNER JOIN Membership m ON s.Stud_no = m.Stud_no
+    -> INNER JOIN Iss_rec i ON m.Mem_no = i.Mem_no
+    -> INNER JOIN Book b ON i.book_no = b.book_no
+    -> WHERE i.iss_date = '2024-04-30';
++-----------+-----------+
+| Stud_name | book_name |
++-----------+-----------+
+| Alice     | Book1     |
+| Bob       | Book2     |
+| Charlie   | Book3     |
+| David     | Book4     |
+| Emma      | Book5     |
+| Frank     | Book6     |
+| Grace     | Book7     |
+| Henry     | Book8     |
+| Ivy       | Book9     |
+| Jack      | Book10    |
++-----------+-----------+
+10 rows in set (0.05 sec)
+
+mysql> SELECT DISTINCT s.*
+    -> FROM Student s
+    -> INNER JOIN Membership m ON s.Stud_no = m.Stud_no
+    -> INNER JOIN Iss_rec i ON m.Mem_no = i.Mem_no
+    -> INNER JOIN Book b ON i.book_no = b.book_no
+    -> WHERE b.author = 'CJDATE';
++---------+-----------+
+| Stud_no | Stud_name |
++---------+-----------+
+|       7 | Grace     |
+|       9 | Ivy       |
++---------+-----------+
+2 rows in set (0.05 sec)
+
+mysql> SELECT s.Stud_name, COUNT(i.iss_no) AS books_borrowed
+    -> FROM Student s
+    -> INNER JOIN Membership m ON s.Stud_no = m.Stud_no
+    -> INNER JOIN Iss_rec i ON m.Mem_no = i.Mem_no
+    -> GROUP BY s.Stud_name;
++-----------+----------------+
+| Stud_name | books_borrowed |
++-----------+----------------+
+| Alice     |              1 |
+| Bob       |              1 |
+| Charlie   |              1 |
+| David     |              1 |
+| Emma      |              1 |
+| Frank     |              1 |
+| Grace     |              1 |
+| Henry     |              1 |
+| Ivy       |              1 |
+| Jack      |              1 |
++-----------+----------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT b.*
+    -> FROM Student s
+    -> INNER JOIN Membership m ON s.Stud_no = m.Stud_no
+    -> INNER JOIN Iss_rec i ON m.Mem_no = i.Mem_no
+    -> INNER JOIN Book b ON i.book_no = b.book_no
+    -> WHERE s.Stud_no = 5;
++---------+-----------+---------+
+| book_no | book_name | author  |
++---------+-----------+---------+
+|     205 | Book5     | Author5 |
++---------+-----------+---------+
+1 row in set (0.00 sec)
+
+mysql> CREATE VIEW Issued_Books AS
+    -> SELECT i.iss_no, i.iss_date, s.Stud_name, b.book_name
+    -> FROM Iss_rec i
+    -> INNER JOIN Membership m ON i.Mem_no = m.Mem_no
+    -> INNER JOIN Student s ON m.Stud_no = s.Stud_no
+    -> INNER JOIN Book b ON i.book_no = b.book_no;
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> CREATE VIEW Last_Week_Issues AS
+    -> SELECT i.*
+    -> FROM Iss_rec i
+    -> WHERE i.iss_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND CURDATE();
+Query OK, 0 rows affected (0.22 sec)
