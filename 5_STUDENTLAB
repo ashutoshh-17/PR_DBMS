@@ -1,0 +1,130 @@
+mysql> CREATE DATABASE Stud_Lab;
+Query OK, 1 row affected (1.09 sec)
+
+mysql> use Stud_Lab;
+Database changed
+mysql> CREATE TABLE Student (stud_no INTEGER PRIMARY KEY, stud_name VARCHAR(255), class VARCHAR(255));
+Query OK, 0 rows affected (1.32 sec)
+
+mysql> CREATE TABLE Class (class VARCHAR(255) PRIMARY KEY, descrip VARCHAR(255));
+Query OK, 0 rows affected (1.21 sec)
+
+mysql> CREATE TABLE Lab (mach_no INTEGER, Lab_no INTEGER, description VARCHAR(255), PRIMARY KEY (mach_no, Lab_no));
+Query OK, 0 rows affected (0.77 sec)
+
+mysql> CREATE TABLE Allotment (Stud_no INTEGER, mach_no INTEGER, dayofweek VARCHAR(255), FOREIGN KEY (Stud_no) REFERENCES Student(stud_no), FOREIGN KEY (mach_no) REFERENCES Lab(mach_no));
+Query OK, 0 rows affected (1.23 sec)
+
+mysql> /*Insert around 10 records in each table*/
+mysql> INSERT INTO Student VALUES(1, 'John Doe', 'CSIT'),(2, 'Jane Smith', 'Economics'),(3, 'Alice Johnson', 'Biology'),(4, 'Bob Brown', 'CSIT'),(5, 'Emily Davis', 'Physics'),(6, 'Michael Wilson', 'CSIT'),(7, 'Sarah Lee', 'Mathematics'),(8, 'David Miller', 'CSIT'),(9, 'Olivia Martinez', 'Chemistry'),(10, 'James Taylor', 'CSIT');
+Query OK, 10 rows affected (0.25 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Class VALUES('CSIT', 'Computer Science and Information Technology'),('Economics', 'Study of economy and markets'),('Biology', 'Study of living organisms'),('Physics', 'Study of matter and energy'),('Mathematics', 'Study of numbers and shapes'),('Chemistry', 'Study of matter and its properties');
+Query OK, 6 rows affected (0.16 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Lab VALUES(1, 101, 'Lab for Programming'),(2, 102, 'Lab for Biology Experiments'),(3, 103, 'Lab for Physics Simulations'),(4, 104, 'Lab for Chemistry Reactions'),(5, 105, 'Lab for Data Analysis'),(6, 106, 'Lab for Network Security'),(7, 107, 'Lab for Robotics'),(8, 108, 'Lab for Web Development'),(9, 109, 'Lab for AI Research'),(10, 110, 'Lab for Electronics');
+Query OK, 10 rows affected (0.10 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Allotment VALUES(1, 1, 'Monday'),(2, 3, 'Tuesday'),(3, 2, 'Wednesday'),(4, 4, 'Thursday'),(5, 5, 'Friday'),(6, 6, 'Monday'),(7, 7, 'Tuesday'),(8, 8, 'Wednesday'),(9, 9, 'Thursday'),(10, 10, 'Friday');
+Query OK, 10 rows affected (0.09 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT s.stud_name, l.Lab_no, a.mach_no
+    -> FROM Student s
+    -> JOIN Allotment a ON s.stud_no = a.Stud_no
+    -> JOIN Lab l ON a.mach_no = l.mach_no;
++-----------------+--------+---------+
+| stud_name       | Lab_no | mach_no |
++-----------------+--------+---------+
+| John Doe        |    101 |       1 |
+| Jane Smith      |    103 |       3 |
+| Alice Johnson   |    102 |       2 |
+| Bob Brown       |    104 |       4 |
+| Emily Davis     |    105 |       5 |
+| Michael Wilson  |    106 |       6 |
+| Sarah Lee       |    107 |       7 |
+| David Miller    |    108 |       8 |
+| Olivia Martinez |    109 |       9 |
+| James Taylor    |    110 |      10 |
++-----------------+--------+---------+
+10 rows in set (0.19 sec)
+
+mysql> SELECT dayofweek, COUNT(*) AS total_lab_allotments
+    -> FROM Allotment
+    -> GROUP BY dayofweek;
++-----------+----------------------+
+| dayofweek | total_lab_allotments |
++-----------+----------------------+
+| Monday    |                    2 |
+| Tuesday   |                    2 |
+| Wednesday |                    2 |
+| Thursday  |                    2 |
+| Friday    |                    2 |
++-----------+----------------------+
+5 rows in set (0.07 sec)
+
+mysql> SELECT COUNT(*) AS machines_allocated_to_CSIT
+    -> FROM Allotment a
+    -> JOIN Student s ON a.Stud_no = s.stud_no
+    -> WHERE s.class = 'CSIT';
++----------------------------+
+| machines_allocated_to_CSIT |
++----------------------------+
+|                          5 |
++----------------------------+
+1 row in set (0.03 sec)
+
+mysql> SELECT s.stud_no, s.stud_name, s.class, a.mach_no, a.dayofweek
+    -> FROM Student s
+    -> JOIN Allotment a ON s.stud_no = a.Stud_no
+    -> WHERE s.stud_no = 5;
++---------+-------------+---------+---------+-----------+
+| stud_no | stud_name   | class   | mach_no | dayofweek |
++---------+-------------+---------+---------+-----------+
+|       5 | Emily Davis | Physics |       5 | Friday    |
++---------+-------------+---------+---------+-----------+
+1 row in set (0.07 sec)
+
+mysql> SELECT COUNT(*) AS machines_allocated_in_lab1_on_monday
+    -> FROM Allotment
+    -> WHERE mach_no IN (SELECT mach_no FROM Lab WHERE Lab_no = 1) AND dayofweek = 'Monday';
++--------------------------------------+
+| machines_allocated_in_lab1_on_monday |
++--------------------------------------+
+|                                    0 |
++--------------------------------------+
+1 row in set (0.04 sec)
+
+mysql> SELECT s.class, COUNT(DISTINCT s.stud_no) AS students_with_machine_allocation
+    -> FROM Student s
+    -> JOIN Allotment a ON s.stud_no = a.Stud_no
+    -> GROUP BY s.class;
++-------------+----------------------------------+
+| class       | students_with_machine_allocation |
++-------------+----------------------------------+
+| Biology     |                                1 |
+| Chemistry   |                                1 |
+| CSIT        |                                5 |
+| Economics   |                                1 |
+| Mathematics |                                1 |
+| Physics     |                                1 |
++-------------+----------------------------------+
+6 rows in set (0.19 sec)
+
+mysql> CREATE VIEW StudentMachineAllotments AS
+    -> SELECT s.stud_no, s.stud_name, a.mach_no, l.Lab_no, a.dayofweek
+    -> FROM Student s
+    -> JOIN Allotment a ON s.stud_no = a.Stud_no
+    -> JOIN Lab l ON a.mach_no = l.mach_no;
+Query OK, 0 rows affected (0.80 sec)
+
+mysql> CREATE VIEW ThursdayMachineAllotments AS
+    -> SELECT s.stud_name, l.Lab_no, a.mach_no
+    -> FROM Student s
+    -> JOIN Allotment a ON s.stud_no = a.Stud_no
+    -> JOIN Lab l ON a.mach_no = l.mach_no
+    -> WHERE a.dayofweek = 'Thursday';
+Query OK, 0 rows affected (0.28 sec)
