@@ -1,0 +1,145 @@
+mysql> CREATE TABLE employee (emp_id INTEGER PRIMARY KEY, emp_name VARCHAR(100));
+Query OK, 0 rows affected (1.50 sec)
+
+mysql> CREATE TABLE department (dept_id INTEGER PRIMARY KEY, dept_name VARCHAR(100));
+Query OK, 0 rows affected (0.53 sec)
+
+mysql> CREATE TABLE paydetails (emp_id INTEGER, dept_id INTEGER, basic INTEGER, deductions INTEGER, additions INTEGER, DOJ DATE, FOREIGN KEY (emp_id) REFERENCES employee(emp_id), FOREIGN KEY (dept_id) REFERENCES department(dept_id));
+Query OK, 0 rows affected (0.64 sec)
+
+mysql> CREATE TABLE payroll (emp_id INTEGER, pay_date DATE, FOREIGN KEY (emp_id) REFERENCES employee(emp_id));
+Query OK, 0 rows affected (0.47 sec)
+
+mysql> /*Inserting records into the employee table*/
+mysql> INSERT INTO employee (emp_id, emp_name) VALUES(1, 'John Doe'),(2, 'Jane Smith'),(3, 'Alice Johnson'),(4, 'Bob Williams'),(5, 'Emily Brown'),(6, 'Michael Davis'),(7, 'Sarah Wilson'),(8, 'David Martinez'),(9, 'Jennifer Taylor'),(10, 'James Anderson');
+Query OK, 10 rows affected (0.12 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into the department table*/
+mysql> INSERT INTO department (dept_id, dept_name) VALUES(1, 'HR'),(2, 'Finance'),(3, 'IT'),(4, 'Marketing'),(5, 'Operations'),(6, 'Sales'),(7, 'Legal'),(8, 'R&D'),(9, 'Customer Service'),(10, 'Admin');
+Query OK, 10 rows affected (0.23 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into the paydetails table*/
+mysql> INSERT INTO paydetails (emp_id, dept_id, basic, deductions, additions, DOJ) VALUES(1, 1, 15000, 2000, 1000, '2023-01-15'),(2, 2, 18000, 2500, 1200, '2022-12-20'),(3, 3, 22000, 3000, 1500, '2023-05-10'),(4, 4, 17000, 2200, 1100, '2023-08-05'),(5, 5, 19000, 2800, 1300, '2023-03-25'),(6, 6, 20000, 3200, 1600, '2023-11-30'),(7, 7, 16000, 2300, 1000, '2022-10-12'),(8, 8, 25000, 3500, 1800, '2023-09-18'),(9, 9, 14000, 2000, 900, '2023-07-07'),(10, 10, 21000, 2800, 1400, '2022-11-28');
+Query OK, 10 rows affected (0.10 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into the payroll table*/
+mysql> INSERT INTO payroll (emp_id, pay_date) VALUES(1, '2024-04-15'),(2, '2024-04-15'),(3, '2024-04-15'),(4, '2024-04-15'),(5, '2024-04-15'),(6, '2024-04-15'),(7, '2024-04-15'),(8, '2024-04-15'),(9, '2024-04-15'),(10, '2024-04-15');
+Query OK, 10 rows affected (0.13 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT e.emp_id, e.emp_name, d.dept_name
+    -> FROM employee e
+    -> INNER JOIN paydetails pd ON e.emp_id = pd.emp_id
+    -> INNER JOIN department d ON pd.dept_id = d.dept_id;
++--------+-----------------+------------------+
+| emp_id | emp_name        | dept_name        |
++--------+-----------------+------------------+
+|      1 | John Doe        | HR               |
+|      2 | Jane Smith      | Finance          |
+|      3 | Alice Johnson   | IT               |
+|      4 | Bob Williams    | Marketing        |
+|      5 | Emily Brown     | Operations       |
+|      6 | Michael Davis   | Sales            |
+|      7 | Sarah Wilson    | Legal            |
+|      8 | David Martinez  | R&D              |
+|      9 | Jennifer Taylor | Customer Service |
+|     10 | James Anderson  | Admin            |
++--------+-----------------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT emp_name
+    -> FROM employee
+    -> INNER JOIN paydetails ON employee.emp_id = paydetails.emp_id
+    -> WHERE DOJ > '2023-01-01';
++-----------------+
+| emp_name        |
++-----------------+
+| John Doe        |
+| Alice Johnson   |
+| Bob Williams    |
+| Emily Brown     |
+| Michael Davis   |
+| David Martinez  |
+| Jennifer Taylor |
++-----------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT * FROM paydetails WHERE basic BETWEEN 10000 AND 20000;
++--------+---------+-------+------------+-----------+------------+
+| emp_id | dept_id | basic | deductions | additions | DOJ        |
++--------+---------+-------+------------+-----------+------------+
+|      1 |       1 | 15000 |       2000 |      1000 | 2023-01-15 |
+|      2 |       2 | 18000 |       2500 |      1200 | 2022-12-20 |
+|      4 |       4 | 17000 |       2200 |      1100 | 2023-08-05 |
+|      5 |       5 | 19000 |       2800 |      1300 | 2023-03-25 |
+|      6 |       6 | 20000 |       3200 |      1600 | 2023-11-30 |
+|      7 |       7 | 16000 |       2300 |      1000 | 2022-10-12 |
+|      9 |       9 | 14000 |       2000 |       900 | 2023-07-07 |
++--------+---------+-------+------------+-----------+------------+
+7 rows in set (0.02 sec)
+
+mysql> SELECT d.dept_name, COUNT(*) AS num_employees
+    -> FROM department d
+    -> INNER JOIN paydetails pd ON d.dept_id = pd.dept_id
+    -> GROUP BY d.dept_name;
++------------------+---------------+
+| dept_name        | num_employees |
++------------------+---------------+
+| HR               |             1 |
+| Finance          |             1 |
+| IT               |             1 |
+| Marketing        |             1 |
+| Operations       |             1 |
+| Sales            |             1 |
+| Legal            |             1 |
+| R&D              |             1 |
+| Customer Service |             1 |
+| Admin            |             1 |
++------------------+---------------+
+10 rows in set (0.03 sec)
+
+mysql> SELECT emp_name
+    -> FROM employee
+    -> INNER JOIN paydetails ON employee.emp_id = paydetails.emp_id
+    -> WHERE (basic + additions - deductions) > 10000;
++-----------------+
+| emp_name        |
++-----------------+
+| John Doe        |
+| Jane Smith      |
+| Alice Johnson   |
+| Bob Williams    |
+| Emily Brown     |
+| Michael Davis   |
+| Sarah Wilson    |
+| David Martinez  |
+| Jennifer Taylor |
+| James Anderson  |
++-----------------+
+10 rows in set (0.03 sec)
+
+mysql> SELECT *FROM employee
+    -> INNER JOIN paydetails ON employee.emp_id = paydetails.emp_id
+    -> WHERE employee.emp_id = 5;
++--------+-------------+--------+---------+-------+------------+-----------+------------+
+| emp_id | emp_name    | emp_id | dept_id | basic | deductions | additions | DOJ        |
++--------+-------------+--------+---------+-------+------------+-----------+------------+
+|      5 | Emily Brown |      5 |       5 | 19000 |       2800 |      1300 | 2023-03-25 |
++--------+-------------+--------+---------+-------+------------+-----------+------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE VIEW employee_pay_view AS
+    -> SELECT e.emp_name, d.dept_name, pd.basic, pd.deductions, (pd.basic + pd.additions - pd.deductions) AS net_salary
+    -> FROM employee e
+    -> INNER JOIN paydetails pd ON e.emp_id = pd.emp_id
+    -> INNER JOIN department d ON pd.dept_id = d.dept_id;
+Query OK, 0 rows affected (0.22 sec)
+
+mysql> CREATE VIEW employee_net_salary_view AS
+    -> SELECT emp_name, (basic + additions - deductions) AS net_salary
+    -> FROM employee
+    -> INNER JOIN paydetails ON employee.emp_id = paydetails.emp_id;
+Query OK, 0 rows affected (0.17 sec)
