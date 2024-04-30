@@ -1,0 +1,159 @@
+mysql> CREATE DATABASE Video_Lib;
+Query OK, 1 row affected (0.46 sec)
+
+mysql> use Video_Lib;
+Database changed
+mysql> CREATE TABLE Customer (cust_no INTEGER PRIMARY KEY, cust_name VARCHAR(100));
+Query OK, 0 rows affected (1.47 sec)
+
+mysql> CREATE TABLE Membership (Mem_no INTEGER PRIMARY KEY, cust_no INTEGER, FOREIGN KEY (cust_no) REFERENCES Customer(cust_no));
+Query OK, 0 rows affected (1.42 sec)
+
+mysql> CREATE TABLE Cassette (cass_no INTEGER PRIMARY KEY, cass_name VARCHAR(100), Language VARCHAR(50));
+Query OK, 0 rows affected (0.69 sec)
+
+mysql> CREATE TABLE Iss_rec (iss_no INTEGER PRIMARY KEY, iss_date DATE, mem_no INTEGER, cass_no INTEGER, FOREIGN KEY (mem_no) REFERENCES Membership(Mem_no), FOREIGN KEY (cass_no) REFERENCES Cassette(cass_no));
+Query OK, 0 rows affected (0.95 sec)
+
+mysql> /*Inserting records into the Customer table*/
+mysql> INSERT INTO Customer (cust_no, cust_name) VALUES(1, 'John Doe'),(2, 'Jane Smith'),(3, 'Alice Johnson'),(4, 'Bob Williams'),(5, 'Emily Brown'),(6, 'Michael Davis'),(7, 'Sarah Wilson'),(8, 'David Martinez'),(9, 'Jennifer Taylor'),(10, 'James Anderson');
+Query OK, 10 rows affected (0.25 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into the Membership table*/
+mysql> INSERT INTO Membership (Mem_no, cust_no) VALUES(1, 1),(2, 2),(3, 3),(4, 4),(5, 5),(6, 6),(7, 7),(8, 8),(9, 9),(10, 10);
+Query OK, 10 rows affected (0.10 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into the Cassette table*/
+mysql> INSERT INTO Cassette (cass_no, cass_name, Language) VALUES(1, 'The Legend', 'English'),(2, 'Action Hero', 'English'),(3, 'Comedy King', 'English'),(4, 'Romantic Bliss', 'English'),(5, 'Thriller Night', 'English'),(6, 'Fantasy Island', 'English'),(7, 'Sci-Fi Frenzy', 'English'),(8, 'Horror House', 'English'),(9, 'Drama Queen', 'English'),(10, 'Documentary Journey', 'English');
+Query OK, 10 rows affected (0.21 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> /*Inserting records into the Iss_rec table*/
+mysql> INSERT INTO Iss_rec (iss_no, iss_date, mem_no, cass_no) VALUES(1, '2024-04-30', 1, 1),(2, '2024-04-30', 2, 2),(3, '2024-04-30', 3, 3),(4, '2024-04-30', 4, 4),(5, '2024-04-30', 5, 5),(6, '2024-04-30', 6, 6),(7, '2024-04-30', 7, 7),(8, '2024-04-30', 8, 8),(9, '2024-04-30', 9, 9),(10, '2024-04-30', 10, 10);
+Query OK, 10 rows affected (0.17 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT c.cust_name, m.Mem_no
+    -> FROM Customer c
+    -> INNER JOIN Membership m ON c.cust_no = m.cust_no;
++-----------------+--------+
+| cust_name       | Mem_no |
++-----------------+--------+
+| John Doe        |      1 |
+| Jane Smith      |      2 |
+| Alice Johnson   |      3 |
+| Bob Williams    |      4 |
+| Emily Brown     |      5 |
+| Michael Davis   |      6 |
+| Sarah Wilson    |      7 |
+| David Martinez  |      8 |
+| Jennifer Taylor |      9 |
+| James Anderson  |     10 |
++-----------------+--------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT c.cust_name, cas.cass_name
+    -> FROM Customer c
+    -> INNER JOIN Membership m ON c.cust_no = m.cust_no
+    -> INNER JOIN Iss_rec ir ON m.Mem_no = ir.mem_no
+    -> INNER JOIN Cassette cas ON ir.cass_no = cas.cass_no
+    -> WHERE ir.iss_date = CURDATE();
++-----------------+---------------------+
+| cust_name       | cass_name           |
++-----------------+---------------------+
+| John Doe        | The Legend          |
+| Jane Smith      | Action Hero         |
+| Alice Johnson   | Comedy King         |
+| Bob Williams    | Romantic Bliss      |
+| Emily Brown     | Thriller Night      |
+| Michael Davis   | Fantasy Island      |
+| Sarah Wilson    | Sci-Fi Frenzy       |
+| David Martinez  | Horror House        |
+| Jennifer Taylor | Drama Queen         |
+| James Anderson  | Documentary Journey |
++-----------------+---------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT c.*
+    -> FROM Customer c
+    -> INNER JOIN Membership m ON c.cust_no = m.cust_no
+    -> INNER JOIN Iss_rec ir ON m.Mem_no = ir.mem_no
+    -> INNER JOIN Cassette cas ON ir.cass_no = cas.cass_no
+    -> WHERE cas.cass_name = 'The Legend';
++---------+-----------+
+| cust_no | cust_name |
++---------+-----------+
+|       1 | John Doe  |
++---------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT c.cust_name, COUNT(ir.iss_no) AS num_borrowed
+    -> FROM Customer c
+    -> INNER JOIN Membership m ON c.cust_no = m.cust_no
+    -> INNER JOIN Iss_rec ir ON m.Mem_no = ir.mem_no
+    -> GROUP BY c.cust_name;
++-----------------+--------------+
+| cust_name       | num_borrowed |
++-----------------+--------------+
+| John Doe        |            1 |
+| Jane Smith      |            1 |
+| Alice Johnson   |            1 |
+| Bob Williams    |            1 |
+| Emily Brown     |            1 |
+| Michael Davis   |            1 |
+| Sarah Wilson    |            1 |
+| David Martinez  |            1 |
+| Jennifer Taylor |            1 |
+| James Anderson  |            1 |
++-----------------+--------------+
+10 rows in set (0.04 sec)
+
+mysql> SELECT cas.*
+    -> FROM Cassette cas
+    -> INNER JOIN Iss_rec ir ON cas.cass_no = ir.cass_no
+    -> WHERE ir.mem_no = 5;
++---------+----------------+----------+
+| cass_no | cass_name      | Language |
++---------+----------------+----------+
+|       5 | Thriller Night | English  |
++---------+----------------+----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT c.cass_name
+    -> FROM Cassette c
+    -> INNER JOIN Iss_rec ir ON c.cass_no = ir.cass_no
+    -> WHERE ir.iss_date = CURDATE();
++---------------------+
+| cass_name           |
++---------------------+
+| The Legend          |
+| Action Hero         |
+| Comedy King         |
+| Romantic Bliss      |
+| Thriller Night      |
+| Fantasy Island      |
+| Sci-Fi Frenzy       |
+| Horror House        |
+| Drama Queen         |
+| Documentary Journey |
++---------------------+
+10 rows in set (0.00 sec)
+
+mysql> CREATE VIEW issue_details_view AS
+    -> SELECT ir.iss_no, ir.iss_date, c.cust_name, cas.cass_name
+    -> FROM Iss_rec ir
+    -> INNER JOIN Membership m ON ir.mem_no = m.Mem_no
+    -> INNER JOIN Customer c ON m.cust_no = c.cust_no
+    -> INNER JOIN Cassette cas ON ir.cass_no = cas.cass_no;
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> CREATE VIEW weekly_issue_view AS
+    -> SELECT ir.iss_date, c.cust_name, cas.cass_name
+    -> FROM Iss_rec ir
+    -> INNER JOIN Membership m ON ir.mem_no = m.Mem_no
+    -> INNER JOIN Customer c ON m.cust_no = c.cust_no
+    -> INNER JOIN Cassette cas ON ir.cass_no = cas.cass_no
+    -> WHERE ir.iss_date >= CURDATE() - INTERVAL 7 DAY;
+Query OK, 0 rows affected (0.21 sec)
