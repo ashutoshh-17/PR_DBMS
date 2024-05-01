@@ -1,3 +1,18 @@
+1. Database Schema for a customer-sale scenario
+Customer(Cust id : integer, cust_name: string)
+Item(item_id: integer, item_name: string, price: integer)
+Sale(bill_no: integer, bill_data: date, cust_id: integer, item_id: integer, qty_sold: integer)
+For the above schema, perform the following—
+a) Create the tables with the appropriate integrity constraints
+b) Insert around 10 records in each of the tables
+c) List all the bills for the current date with the customer names and item numbers
+d) List the total Bill details with the quantity sold, price of the item and the final amount
+e) List the details of the customer who have bought a product which has a price>200
+f) Give a count of how many products have been bought by each customer
+g) Give a list of products bought by a customer having cust_id as 5
+h) List the item details which are sold as of today
+i) Create a view which lists out the bill_no, bill_date, cust_id, item_id, price, qty_sold, amount
+
 mysql> CREATE DATABASE PRACTICAL1;
 USE PRACTICAL1; 
 CREATE TABLE Customer (cust_id INT PRIMARY KEY, cust_name VARCHAR(255));
