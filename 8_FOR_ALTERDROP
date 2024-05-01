@@ -1,0 +1,26 @@
+mysql> CREATE DATABASE for_alt_dr;
+Query OK, 1 row affected (0.16 sec)
+
+mysql> use for_alt_dr
+Database changed
+mysql> CREATE TABLE Authors (AuthorID INT PRIMARY KEY, AuthorName VARCHAR(100));
+Query OK, 0 rows affected (0.53 sec)
+
+mysql> CREATE TABLE Books (BookID INT PRIMARY KEY, Title VARCHAR(100), AuthorID INT, FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID));
+Query OK, 0 rows affected (1.54 sec)
+
+mysql> ALTER TABLE Books
+    -> ADD PublicationYear INT;
+Query OK, 0 rows affected (1.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE Authors
+    -> MODIFY COLUMN AuthorName VARCHAR(150);
+Query OK, 0 rows affected (0.24 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DROP TABLE Books;
+Query OK, 0 rows affected (0.45 sec)
+
+mysql> DROP TABLE Authors;
+Query OK, 0 rows affected (0.41 sec)
