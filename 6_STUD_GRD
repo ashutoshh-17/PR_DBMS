@@ -1,0 +1,46 @@
+mysql> CREATE DATABASE stud_grade;
+Query OK, 1 row affected (0.29 sec)
+
+mysql> use stud_grade;
+Database changed
+
+mysql> CREATE TABLE StudentDetails (
+    ->     RollNo INT PRIMARY KEY,
+    ->     Name VARCHAR(50),
+    ->     Subject1Marks INT,
+    ->     Subject2Marks INT,
+    ->     Subject3Marks INT,
+    ->     Subject4Marks INT,
+    ->     Subject5Marks INT
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER //
+mysql> CREATE FUNCTION CalculateGrade(student_roll_no INT)
+    -> RETURNS CHAR(1)
+    -> BEGIN
+    ->     DECLARE avg_marks DECIMAL(5,2);
+    ->     DECLARE grade CHAR(1);
+    ->
+    ->     SELECT (Subject1Marks + Subject2Marks + Subject3Marks + Subject4Marks + Subject5Marks) / 5
+    ->     INTO avg_marks
+    ->     FROM StudentDetails
+    ->     WHERE RollNo = student_roll_no;
+    ->
+    ->     IF avg_marks >= 90 THEN
+    ->         SET grade = 'A';
+    ->     ELSEIF avg_marks >= 80 THEN
+    ->         SET grade = 'B';
+    ->     ELSEIF avg_marks >= 70 THEN
+    ->         SET grade = 'C';
+    ->     ELSEIF avg_marks >= 60 THEN
+    ->         SET grade = 'D';
+    ->     ELSE
+    ->         SET grade = 'F';
+    ->     END IF;
+    ->
+    ->     RETURN grade;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
