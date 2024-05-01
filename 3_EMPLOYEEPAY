@@ -1,3 +1,21 @@
+3. Database Schema for a Employee-pay scenario
+employee(emp_id : integer, emp_name: string)
+department(dept_id: integer, dept_name:string)
+paydetails(emp_id : integer, dept_id: integer, basic: integer, deductions: integer, additions:
+integer, DOJ: date)
+payroll(emp_id : integer, pay_date: date)
+For the above schema, perform the following—
+a) Create the tables with the appropriate integrity constraints
+b) Insert around 10 records in each of the tables
+c) List the employee details department wise
+d) List all the employee names who joined after particular date
+e) List the details of employees whose basic salary is between 10,000 and 20,000
+f) Give a count of how many employees are working in each department
+g) Give a names of the employees whose netsalary>10,000
+h) List the details for an employee_id=5
+i) Create a view which lists out the emp_name, department, basic, dedeuctions, netsalary
+j) Create a view which lists the emp_name and his netsalary
+
 mysql> CREATE TABLE employee (emp_id INTEGER PRIMARY KEY, emp_name VARCHAR(100));
 Query OK, 0 rows affected (1.50 sec)
 
