@@ -1,3 +1,19 @@
+2. Database Schema for a Student Library scenario
+Student(Stud_no : integer, Stud_name: string)
+Membership(Mem_no: integer, Stud_no: integer)
+Book(book_no: integer, book_name:string, author: string)
+Iss_rec(iss_no:integer, iss_date: date, Mem_no: integer, book_no: integer)
+For the above schema, perform the following—
+Create the tables with the appropriate integrity constraints
+a) Insert around 10 records in each of the tables
+b) List all the student names with their membership numbers
+c) List all the issues for the current date with student and Book names
+d) List the details of students who borrowed book whose author is CJDATE
+e) Give a count of how many books have been bought by each student
+f) Give a list of books taken by student with stud_no as 5
+g) Create a view which lists out the iss_no, iss _date, stud_name, book name
+h) Create a view which lists the daily issues-date wise for the last one week
+
 mysql> CREATE TABLE Student (Stud_no INTEGER PRIMARY KEY, Stud_name VARCHAR(50) NOT NULL);
 Query OK, 0 rows affected (0.71 sec)
 
