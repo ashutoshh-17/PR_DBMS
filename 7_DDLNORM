@@ -1,0 +1,43 @@
+7. Design and implement a database using DDL statements and apply normalization on them.
+
+CREATE TABLE Books (
+    ISBN VARCHAR(20) PRIMARY KEY,
+    Title VARCHAR(100),
+    Author_ID INT,
+    Publisher_ID INT,
+    Genre VARCHAR(50),
+    Publication_Year INT,
+    FOREIGN KEY (Author_ID) REFERENCES Authors(Author_ID),
+    FOREIGN KEY (Publisher_ID) REFERENCES Publishers(Publisher_ID)
+);
+
+CREATE TABLE Authors (
+    Author_ID INT PRIMARY KEY,
+    Author_Name VARCHAR(100)
+);
+
+
+CREATE TABLE Publishers (
+    Publisher_ID INT PRIMARY KEY,
+    Publisher_Name VARCHAR(100)
+);
+
+
+CREATE TABLE Members (
+    Member_ID INT PRIMARY KEY,
+    Member_Name VARCHAR(100),
+    Email VARCHAR(100),
+    Phone_Number VARCHAR(20)
+);
+
+
+/*DONT RUN THIS:
+
+Our tables are currently in the first normal form (1NF) as there are no repeating groups.
+
+To achieve Second Normal Form (2NF), we need to ensure that all non-key attributes are fully functional dependent on the primary key. Our tables already satisfy this condition.
+
+For Third Normal Form (3NF), we need to ensure that there are no transitive dependencies. In our current design, there's no such dependency.
+
+Therefore, our tables are already in the third normal form, and normalization is complete.
+*/
