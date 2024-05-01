@@ -1,0 +1,178 @@
+9.Perform following SQL queries on the database:
+• Pattern matching
+• Arithmetic operations and built in functions
+
+mysql> CREATE DATABASE college;
+Query OK, 1 row affected (0.12 sec)
+
+mysql> use college;
+Database changed
+mysql> CREATE TABLE STUDENT(ROLL_NO INT, NAME VARCHAR(20), MARKS INT);
+Query OK, 0 rows affected (0.40 sec)
+
+mysql> INSERT INTO STUDENT VALUES(1, 'VIVEK', 75);
+Query OK, 1 row affected (0.12 sec)
+
+mysql> INSERT INTO STUDENT VALUES(2, 'ASHUTOSH', 80);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> INSERT INTO STUDENT VALUES(3, 'TUSHAR', 77);
+Query OK, 1 row affected (0.12 sec)
+
+mysql> INSERT INTO STUDENT VALUES(4, 'SHASHWAT', 74);
+Query OK, 1 row affected (0.10 sec)
+
+mysql> ALTER TABLE STUDENT ADD PRIMARY KEY(ROLL_NO);
+Query OK, 0 rows affected (1.56 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> /*Pattern Matching*/
+mysql> SELECT * FROM STUDENT;
++---------+----------+-------+
+| ROLL_NO | NAME     | MARKS |
++---------+----------+-------+
+|       1 | VIVEK    |    75 |
+|       2 | ASHUTOSH |    80 |
+|       3 | TUSHAR   |    77 |
+|       4 | SHASHWAT |    74 |
++---------+----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM STUDENT WHERE ROLL_NO IN(1,4);
++---------+----------+-------+
+| ROLL_NO | NAME     | MARKS |
++---------+----------+-------+
+|       1 | VIVEK    |    75 |
+|       4 | SHASHWAT |    74 |
++---------+----------+-------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM STUDENT WHERE NAME LIKE 'V%';
++---------+-------+-------+
+| ROLL_NO | NAME  | MARKS |
++---------+-------+-------+
+|       1 | VIVEK |    75 |
++---------+-------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT ROLL_NO FROM STUDENT GROUP BY ROLL_NO;
++---------+
+| ROLL_NO |
++---------+
+|       1 |
+|       2 |
+|       3 |
+|       4 |
++---------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT  NAME, MARKS FROM STUDENT GROUP BY NAME, MARKS HAVING MARKS<90;
++----------+-------+
+| NAME     | MARKS |
++----------+-------+
+| VIVEK    |    75 |
+| ASHUTOSH |    80 |
+| TUSHAR   |    77 |
+| SHASHWAT |    74 |
++----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM STUDENT ORDER BY NAME;
++---------+----------+-------+
+| ROLL_NO | NAME     | MARKS |
++---------+----------+-------+
+|       2 | ASHUTOSH |    80 |
+|       4 | SHASHWAT |    74 |
+|       3 | TUSHAR   |    77 |
+|       1 | VIVEK    |    75 |
++---------+----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM STUDENT ORDER BY NAME DESC;
++---------+----------+-------+
+| ROLL_NO | NAME     | MARKS |
++---------+----------+-------+
+|       1 | VIVEK    |    75 |
+|       3 | TUSHAR   |    77 |
+|       4 | SHASHWAT |    74 |
+|       2 | ASHUTOSH |    80 |
++---------+----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE STUDENT2(ROLL_NO INT PRIMARY KEY , NAME VARCHAR(30) ,MARKS INT, DOB DATE  );
+Query OK, 0 rows affected (0.53 sec)
+
+mysql> INSERT INTO STUDENT2 VALUES(91 , 'RAM' , 90 , '2005-01-01'  );
+INSERT INTO STUDENT2 VALUES(92 , 'SHAM' ,91, '2005-02-02'  );
+INSERT INTO STUDENT2 VALUES(93 , 'KARAN' ,92, '2005-03-03' );
+INSERT INTO STUDENT2 VALUES(94 , 'ARJUN' , 93 ,'2005-04-04' );
+
+Query OK, 1 row affected (0.14 sec)
+
+Query OK, 1 row affected (0.13 sec)
+
+Query OK, 1 row affected (0.12 sec)
+
+Query OK, 1 row affected (0.04 sec)
+
+mysql> SELECT * FROM STUDENT2;
++---------+-------+-------+------------+
+| ROLL_NO | NAME  | MARKS | DOB        |
++---------+-------+-------+------------+
+|      91 | RAM   |    90 | 2005-01-01 |
+|      92 | SHAM  |    91 | 2005-02-02 |
+|      93 | KARAN |    92 | 2005-03-03 |
+|      94 | ARJUN |    93 | 2005-04-04 |
++---------+-------+-------+------------+
+4 rows in set (0.00 sec)
+
+
+mysql> ALTER TABLE STUDENT2 DROP COLUMN DOB;
+Query OK, 0 rows affected (0.39 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM STUDENT UNION SELECT * FROM STUDENT2;
++---------+----------+-------+
+| ROLL_NO | NAME     | MARKS |
++---------+----------+-------+
+|       1 | VIVEK    |    75 |
+|       2 | ASHUTOSH |    80 |
+|       3 | TUSHAR   |    77 |
+|       4 | SHASHWAT |    74 |
+|      91 | RAM      |    90 |
+|      92 | SHAM     |    91 |
+|      93 | KARAN    |    92 |
+|      94 | ARJUN    |    93 |
++---------+----------+-------+
+8 rows in set (0.02 sec)
+
+mysql> /*ARITHMETIC OPERATIONS*/
+mysql> SELECT * FROM STUDENT;
++---------+----------+-------+
+| ROLL_NO | NAME     | MARKS |
++---------+----------+-------+
+|       1 | VIVEK    |    75 |
+|       2 | ASHUTOSH |    80 |
+|       3 | TUSHAR   |    77 |
+|       4 | SHASHWAT |    74 |
++---------+----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE STUDENT SET MARKS = MARKS + 20 WHERE ROLL_NO = 1;
+Query OK, 1 row affected (0.09 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE STUDENT SET MARKS = MARKS + 25 WHERE ROLL_NO = 2;
+Query OK, 1 row affected (0.12 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM STUDENT;
++---------+----------+-------+
+| ROLL_NO | NAME     | MARKS |
++---------+----------+-------+
+|       1 | VIVEK    |    95 |
+|       2 | ASHUTOSH |   105 |
+|       3 | TUSHAR   |    77 |
+|       4 | SHASHWAT |    74 |
++---------+----------+-------+
+4 rows in set (0.00 sec)
