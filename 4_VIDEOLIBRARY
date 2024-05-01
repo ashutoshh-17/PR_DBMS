@@ -1,3 +1,20 @@
+4. Database Schema for a Video Library scenario
+Customer(cust_no: integer,cust_name: string)
+Membership(Mem_no: integer, cust_no: integer)
+Cassette(cass_no:integer, cass_name:string, Language: String)
+Iss_rec(iss_no: integer, iss_date: date, mem_no: integer, cass_no: integer)
+For the above schema, perform the following—
+a) Create the tables with the appropriate integrity constraints
+b) Insert around 10 records in each of the tables
+c) List all the customer names with their membership numbers
+d) List all the issues for the current date with the customer names and cassette names
+e) List the details of the customer who has borrowed the cassette whose title is “ The Legend”
+f) Give a count of how many cassettes have been borrowed by each customer
+g) Give a list of book which has been taken by the student with mem_no as 5
+h) List the cassettes issues for today
+i) Create a view which lists outs the iss_no, iss_date, cust_name, cass_name
+j) Create a view which lists issues-date wise for the last one week
+
 mysql> CREATE DATABASE Video_Lib;
 Query OK, 1 row affected (0.46 sec)
 
