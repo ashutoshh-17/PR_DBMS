@@ -1,3 +1,21 @@
+5. Database Schema for a student-Lab scenario
+Student(stud_no: integer, stud_name: string, class: string)
+Class(class: string, descrip: string)
+Lab(mach_no: integer, Lab_no: integer, description: String)
+Allotment(Stud_no: Integer, mach_no: integer, dayof week: string)
+For the above schema, perform the following—
+a) Create the tables with the appropriate integrity constraints
+b) Insert around 10 records in each of the tables
+c) List all the machine allotments with the student names, lab and machine numbers
+d) List the total number of lab allotments day wise
+e) Give a count of how many machines have been allocated to the ‘CSIT’ class
+f) Give a machine allotment etails of the stud_no 5 with his personal and class details
+g) Count for how many machines have been allocatedin Lab_no 1 for the day of the week
+as “Monday”
+h) How many students class wise have allocated machines in the labs
+i) Create a view which lists out the stud_no, stud_name, mach_no, lab_no, dayofweek
+j) Create a view which lists the machine allotment details for “Thursday”.
+
 mysql> CREATE DATABASE Stud_Lab;
 Query OK, 1 row affected (1.09 sec)
 
