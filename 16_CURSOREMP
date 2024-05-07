@@ -1,1 +1,10 @@
-UPDATING SOON
+16. Database Schema for a Employee-pay scenario
+employee(emp_id : integer, emp_name: string)
+department(dept_id: integer, dept_name:string)
+paydetails(emp_id : integer, dept_id: integer, salary: integer, DOJ: date)
+payroll(emp_id : integer, pay_date: date)
+
+Write a cursor which will update the salary of all employees as per following conditions:
+• If salary >= 75000 then increment salary by 5000
+• If 50000<= salary< 75000 then increment salary by 3000
+• Else then increment salary by 1500
