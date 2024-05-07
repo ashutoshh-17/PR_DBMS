@@ -1,3 +1,10 @@
+14. Consider following database:
+Student(Stud_no : integer, Stud_name: string)
+Membership(Mem_no: integer, Stud_no: integer)
+Book(book_no: integer, book_name:string, author: string)
+Iss_rec(iss_no:integer, iss_date: date, Mem_no: integer, book_no: integer)
+Write a trigger to update quantity of book if that book is issued to student.
+
 mysql> CREATE DATABASE QUES14;
 Query OK, 1 row affected (0.00 sec)
 
