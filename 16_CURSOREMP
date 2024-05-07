@@ -8,3 +8,139 @@ Write a cursor which will update the salary of all employees as per following co
 • If salary >= 75000 then increment salary by 5000
 • If 50000<= salary< 75000 then increment salary by 3000
 • Else then increment salary by 1500
+
+mysql> CREATE DATABASE QUES16;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE QUES16;
+Database changed
+mysql> CREATE TABLE employee (
+    ->     emp_id INTEGER PRIMARY KEY,
+    ->     emp_name VARCHAR(255) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> CREATE TABLE department (
+    ->     dept_id INTEGER PRIMARY KEY,
+    ->     dept_name VARCHAR(255) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> CREATE TABLE paydetails (
+    ->     emp_id INTEGER,
+    ->     dept_id INTEGER,
+    ->     salary INTEGER,
+    ->     DOJ DATE,
+    ->     FOREIGN KEY (emp_id) REFERENCES employee(emp_id),
+    ->     FOREIGN KEY (dept_id) REFERENCES department(dept_id)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TABLE payroll (
+    ->     emp_id INTEGER,
+    ->     pay_date DATE,
+    ->     FOREIGN KEY (emp_id) REFERENCES employee(emp_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO employee (emp_id, emp_name) VALUES
+    -> (1, 'John Doe'),
+    -> (2, 'Jane Smith'),
+    -> (3, 'Michael Johnson'),
+    -> (4, 'Emily Brown'),
+    -> (5, 'David Wilson'),
+    -> (6, 'Jennifer Lee'),
+    -> (7, 'Christopher Davis'),
+    -> (8, 'Jessica Martinez'),
+    -> (9, 'Matthew Anderson'),
+    -> (10, 'Amanda Taylor');
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO department (dept_id, dept_name) VALUES
+    -> (1, 'HR'),
+    -> (2, 'Finance'),
+    -> (3, 'IT'),
+    -> (4, 'Marketing'),
+    -> (5, 'Operations'),
+    -> (6, 'Sales'),
+    -> (7, 'Legal'),
+    -> (8, 'Research'),
+    -> (9, 'Customer Service'),
+    -> (10, 'Administration');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO paydetails (emp_id, dept_id, salary, DOJ) VALUES
+    -> (1, 1, 80000, '2023-01-15'),
+    -> (2, 2, 60000, '2022-05-20'),
+    -> (3, 3, 70000, '2023-09-10'),
+    -> (4, 4, 55000, '2021-12-05'),
+    -> (5, 5, 45000, '2024-02-18'),
+    -> (6, 6, 75000, '2023-06-30'),
+    -> (7, 7, 48000, '2022-08-12'),
+    -> (8, 8, 68000, '2021-11-25'),
+    -> (9, 9, 52000, '2023-03-08'),
+    -> (10, 10, 70000, '2022-04-03');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO payroll (emp_id, pay_date) VALUES
+    -> (1, '2024-05-01'),
+    -> (2, '2024-05-01'),
+    -> (3, '2024-05-01'),
+    -> (4, '2024-05-01'),
+    -> (5, '2024-05-01'),
+    -> (6, '2024-05-01'),
+    -> (7, '2024-05-01'),
+    -> (8, '2024-05-01'),
+    -> (9, '2024-05-01'),
+    -> (10, '2024-05-01');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> DELIMITER //
+mysql>
+mysql> CREATE PROCEDURE update_salary()
+    -> BEGIN
+    ->     DECLARE v_emp_id INT;
+    ->     DECLARE v_salary INT;
+    ->
+    ->     DECLARE done INT DEFAULT FALSE;
+    ->     DECLARE salary_cursor CURSOR FOR
+    ->         SELECT emp_id, salary FROM paydetails;
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    ->
+    ->     OPEN salary_cursor;
+    ->
+    ->     salary_loop: LOOP
+    ->         FETCH salary_cursor INTO v_emp_id, v_salary;
+    ->         IF done THEN
+    ->             LEAVE salary_loop;
+    ->         END IF;
+    ->
+    ->         IF v_salary >= 75000 THEN
+    ->             UPDATE paydetails
+    ->             SET salary = salary + 5000
+    ->             WHERE emp_id = v_emp_id;
+    ->         ELSEIF v_salary >= 50000 THEN
+    ->             UPDATE paydetails
+    ->             SET salary = salary + 3000
+    ->             WHERE emp_id = v_emp_id;
+    ->         ELSE
+    ->             UPDATE paydetails
+    ->             SET salary = salary + 1500
+    ->             WHERE emp_id = v_emp_id;
+    ->         END IF;
+    ->     END LOOP;
+    ->
+    ->     CLOSE salary_cursor;
+    -> END//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql>
