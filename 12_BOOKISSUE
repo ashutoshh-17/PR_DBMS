@@ -1,3 +1,11 @@
+12. Consider following database:
+Student(Stud_no : integer, Stud_name: string)
+Membership(Mem_no: integer, Stud_no: integer)
+Book(book_no: integer, book_name:string, author: string)
+Iss_rec(iss_no:integer, iss_date: date, Mem_no: integer, book_no: integer)
+Find no. of books issued by every students using stored procedure.
+
+
 mysql> /*----------------QUESTION 12-------------------*/
 mysql> CREATE DATABASE QUES12;
 Query OK, 1 row affected (0.00 sec)
