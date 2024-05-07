@@ -1,0 +1,140 @@
+mysql> CREATE DATABASE QUES11;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE QUES11;
+Database changed
+mysql> CREATE TABLE Employee (
+    ->     fname VARCHAR(50),
+    ->     minit CHAR(1),
+    ->     lname VARCHAR(50),
+    ->     ssn CHAR(9) PRIMARY KEY,
+    ->     bdate DATE,
+    ->     address VARCHAR(100),
+    ->     sex CHAR(1),
+    ->     salary DECIMAL(10,2),
+    ->     super_ssn CHAR(9),
+    ->     dno INT
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Employee (fname, minit, lname, ssn, bdate, address, sex, salary, super_ssn, dno)
+    -> VALUES
+    -> ('John', 'D', 'Doe', '123456789', '1990-05-10', '123 Main St, Anytown, USA', 'M', 50000.00, NULL, 1),
+    -> ('Jane', 'M', 'Smith', '234567890', '1991-08-15', '456 Elm St, Othertown, USA', 'F', 60000.00, '123456789', 1),
+    -> ('Alice', 'A', 'Johnson', '345678901', '1988-03-20', '789 Oak St, Anycity, USA', 'F', 55000.00, '123456789', 2),
+    -> ('Bob', 'B', 'Brown', '456789012', '1993-12-25', '321 Pine St, Othercity, USA', 'M', 52000.00, '234567890', 2);
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> Create Department table
+    -> CREATE TABLE Department (
+    ->     dname VARCHAR(50),
+    ->     dnumber INT PRIMARY KEY,
+    ->     mgr_ssn CHAR(9),
+    ->     mgrstartdate DATE
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'Department table
+CREATE TABLE Department (
+    dname VARCHAR(50),
+    dnumber...' at line 1
+mysql> CREATE TABLE Department (
+    ->     dname VARCHAR(50),
+    ->     dnumber INT PRIMARY KEY,
+    ->     mgr_ssn CHAR(9),
+    ->     mgrstartdate DATE
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Department (dname, dnumber, mgr_ssn, mgrstartdate)
+    -> VALUES
+    -> ('HR', 1, '123456789', '2020-01-01'),
+    -> ('Finance', 2, '234567890', '2019-06-01');
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE DeptLocations (
+    ->     dnumber INT,
+    ->     dlocation VARCHAR(100),
+    ->     PRIMARY KEY (dnumber, dlocation)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO DeptLocations (dnumber, dlocation)
+    -> VALUES
+    -> (1, 'Building A'),
+    -> (2, 'Building B');
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Project (
+    ->     pname VARCHAR(50),
+    ->     pnumber INT PRIMARY KEY,
+    ->     plocation VARCHAR(100),
+    ->     dnum INT
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Project (pname, pnumber, plocation, dnum)
+    -> VALUES
+    -> ('Project 1', 1, 'New York', 1),
+    -> ('Project 2', 2, 'Los Angeles', 2);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE WorksOn (
+    ->     essn CHAR(9),
+    ->     pno INT,
+    ->     hours DECIMAL(5,2),
+    ->     PRIMARY KEY (essn, pno)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO WorksOn (essn, pno, hours)
+    -> VALUES
+    -> ('123456789', 1, 40),
+    -> ('234567890', 2, 35),
+    -> ('345678901', 1, 45),
+    -> ('456789012', 2, 30);
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> CREATE TABLE Dependent (
+    ->     essn CHAR(9),
+    ->     dependent_name VARCHAR(50),
+    ->     sex CHAR(1),
+    ->     bdate DATE,
+    ->     relationship VARCHAR(50),
+    ->     PRIMARY KEY (essn, dependent_name)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Dependent (essn, dependent_name, sex, bdate, relationship)
+    -> VALUES
+    -> ('123456789', 'Alice Doe', 'F', '2015-02-01', 'Child'),
+    -> ('234567890', 'Bob Smith', 'M', '2018-07-10', 'Child');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> DELIMITER //
+mysql> CREATE FUNCTION GetEmployeesInDepartment(department_number INT)
+    -> RETURNS INT
+    -> BEGIN
+    ->     DECLARE employee_count INT;
+    ->
+    ->     SELECT COUNT(*) INTO employee_count
+    ->     FROM Employee
+    ->     WHERE dno = department_number;
+    ->
+    ->     RETURN employee_count;
+    -> END//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> SELECT GetEmployeesInDepartment(1);
++-----------------------------+
+| GetEmployeesInDepartment(1) |
++-----------------------------+
+|                           2 |
++-----------------------------+
+1 row in set (0.00 sec)
