@@ -1,1 +1,119 @@
+15. Database Schema for a Employee-pay scenario
+employee(emp_id : integer, emp_name: string)
+department(dept_id: integer, dept_name:string)
+paydetails(emp_id : integer, dept_id: integer, salary: integer, DOJ: date)
+payroll(emp_id : integer, pay_date: date)
+Write a trigger which will restrict insertion of new employee record having salary less than Rs. 20000.
 
+mysql> CREATE DATABASE QUES15;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE QUES15;
+Database changed
+mysql> CREATE TABLE employee (
+    ->     emp_id INTEGER PRIMARY KEY,
+    ->     emp_name VARCHAR(50) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> CREATE TABLE department (
+    ->     dept_id INTEGER PRIMARY KEY,
+    ->     dept_name VARCHAR(50) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> CREATE TABLE paydetails (
+    ->     emp_id INTEGER,
+    ->     dept_id INTEGER,
+    ->     salary INTEGER CHECK (salary >= 0), -- Salary should not be negative
+    ->     DOJ DATE,
+    ->     FOREIGN KEY (emp_id) REFERENCES employee(emp_id),
+    ->     FOREIGN KEY (dept_id) REFERENCES department(dept_id),
+    ->     PRIMARY KEY (emp_id, dept_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> CREATE TABLE payroll (
+    ->     emp_id INTEGER,
+    ->     pay_date DATE,
+    ->     FOREIGN KEY (emp_id) REFERENCES employee(emp_id),
+    ->     PRIMARY KEY (emp_id, pay_date)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> ^C
+mysql> INSERT INTO employee VALUES
+    -> (1, 'John Doe'),
+    -> (2, 'Jane Smith'),
+    -> (3, 'Michael Johnson'),
+    -> (4, 'Emily Davis'),
+    -> (5, 'Chris Wilson'),
+    -> (6, 'Sarah Brown'),
+    -> (7, 'Kevin Lee'),
+    -> (8, 'Rachel Taylor'),
+    -> (9, 'Daniel Martinez'),
+    -> (10, 'Amanda Anderson');
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO department VALUES
+    -> (1, 'HR'),
+    -> (2, 'Finance'),
+    -> (3, 'IT'),
+    -> (4, 'Marketing'),
+    -> (5, 'Operations'),
+    -> (6, 'Sales'),
+    -> (7, 'Research'),
+    -> (8, 'Production'),
+    -> (9, 'Customer Service'),
+    -> (10, 'Administration');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO paydetails VALUES
+    -> (1, 1, 25000, '2023-01-15'),
+    -> (2, 2, 28000, '2022-11-20'),
+    -> (3, 3, 30000, '2023-03-10'),
+    -> (4, 4, 22000, '2023-02-05'),
+    -> (5, 5, 26000, '2023-04-18'),
+    -> (6, 6, 24000, '2023-05-22'),
+    -> (7, 7, 27000, '2023-06-30'),
+    -> (8, 8, 32000, '2023-08-14'),
+    -> (9, 9, 29000, '2023-09-09'),
+    -> (10, 10, 31000, '2023-07-01');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO payroll VALUES
+    -> (1, '2024-04-30'),
+    -> (2, '2024-04-30'),
+    -> (3, '2024-04-30'),
+    -> (4, '2024-04-30'),
+    -> (5, '2024-04-30'),
+    -> (6, '2024-04-30'),
+    -> (7, '2024-04-30'),
+    -> (8, '2024-04-30'),
+    -> (9, '2024-04-30'),
+    -> (10, '2024-04-30');
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> DELIMITER //
+mysql>
+mysql> CREATE TRIGGER check_salary_trigger
+    -> BEFORE INSERT ON paydetails
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF NOT check_salary() THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Salary cannot be less than Rs. 20000';
+    ->     END IF;
+    -> END;
+    -> //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
