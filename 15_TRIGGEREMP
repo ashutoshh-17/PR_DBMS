@@ -23,7 +23,6 @@ mysql> CREATE TABLE department (
     -> );
 Query OK, 0 rows affected (0.01 sec)
 
-mysql>
 mysql> CREATE TABLE paydetails (
     ->     emp_id INTEGER,
     ->     dept_id INTEGER,
@@ -35,7 +34,6 @@ mysql> CREATE TABLE paydetails (
     -> );
 Query OK, 0 rows affected (0.02 sec)
 
-mysql>
 mysql> CREATE TABLE payroll (
     ->     emp_id INTEGER,
     ->     pay_date DATE,
@@ -44,7 +42,6 @@ mysql> CREATE TABLE payroll (
     -> );
 Query OK, 0 rows affected (0.01 sec)
 
-mysql> ^C
 mysql> INSERT INTO employee VALUES
     -> (1, 'John Doe'),
     -> (2, 'Jane Smith'),
@@ -115,5 +112,4 @@ mysql> CREATE TRIGGER check_salary_trigger
     -> //
 Query OK, 0 rows affected (0.01 sec)
 
-mysql>
-mysql> DELIMITER ;
+mysql> DELIMITER;
