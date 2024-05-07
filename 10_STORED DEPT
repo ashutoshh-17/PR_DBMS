@@ -1,3 +1,6 @@
+10. Write a stored procedure to find department no.,dname & sum of salaries of respective
+department. Take department no. as input.
+
 mysql> CREATE DATABASE QUES10;
 Query OK, 1 row affected (0.00 sec)
 
