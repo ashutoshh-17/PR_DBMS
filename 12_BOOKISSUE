@@ -1,0 +1,127 @@
+mysql> /*----------------QUESTION 12-------------------*/
+mysql> CREATE DATABASE QUES12;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE QUES12;
+Database changed
+mysql> CREATE TABLE Student (
+    ->     Stud_no INTEGER PRIMARY KEY,
+    ->     Stud_name VARCHAR(100) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE Membership (
+    ->     Mem_no INTEGER PRIMARY KEY,
+    ->     Stud_no INTEGER,
+    ->     FOREIGN KEY (Stud_no) REFERENCES Student(Stud_no)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> CREATE TABLE Book (
+    ->     book_no INTEGER PRIMARY KEY,
+    ->     book_name VARCHAR(100) NOT NULL,
+    ->     author VARCHAR(100) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> CREATE TABLE Iss_rec (
+    ->     iss_no INTEGER PRIMARY KEY,
+    ->     iss_date DATE,
+    ->     Mem_no INTEGER,
+    ->     book_no INTEGER,
+    ->     FOREIGN KEY (Mem_no) REFERENCES Membership(Mem_no),
+    ->     FOREIGN KEY (book_no) REFERENCES Book(book_no)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO Student (Stud_no, Stud_name) VALUES
+    -> (1, 'John Doe'),
+    -> (2, 'Jane Smith'),
+    -> (3, 'Alice Johnson'),
+    -> (4, 'Bob Williams'),
+    -> (5, 'Emma Brown'),
+    -> (6, 'Michael Davis'),
+    -> (7, 'Sarah Wilson'),
+    -> (8, 'David Martinez'),
+    -> (9, 'Olivia Jones'),
+    -> (10, 'James Taylor');
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Membership (Mem_no, Stud_no) VALUES
+    -> (101, 1),
+    -> (102, 2),
+    -> (103, 3),
+    -> (104, 4),
+    -> (105, 5),
+    -> (106, 6),
+    -> (107, 7),
+    -> (108, 8),
+    -> (109, 9),
+    -> (110, 10);
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Book (book_no, book_name, author) VALUES
+    -> (201, 'Introduction to Databases', 'CJ Date'),
+    -> (202, 'Database Design for Mere Mortals', 'Michael J. Hernandez'),
+    -> (203, 'SQL Cookbook', 'Anthony Molinaro'),
+    -> (204, 'Database Management Systems', 'Raghu Ramakrishnan'),
+    -> (205, 'Database Systems: The Complete Book', 'Hector Garcia-Molina'),
+    -> (206, 'Learning SQL', 'Alan Beaulieu'),
+    -> (207, 'SQL For Dummies', 'Allen G. Taylor'),
+    -> (208, 'Database Systems: Concepts, Design and Applications', 'S. K. Singh');
+Query OK, 8 rows affected (0.00 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Iss_rec (iss_no, iss_date, Mem_no, book_no) VALUES
+    -> (301, '2024-04-30', 101, 201),
+    -> (302, '2024-04-30', 102, 202),
+    -> (303, '2024-04-30', 103, 203),
+    -> (304, '2024-04-30', 104, 204),
+    -> (305, '2024-04-30', 105, 205),
+    -> (306, '2024-04-30', 106, 206),
+    -> (307, '2024-04-30', 107, 207),
+    -> (308, '2024-04-30', 108, 208),
+    -> (309, '2024-04-30', 109, 201),
+    -> (310, '2024-04-30', 110, 202);
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE CountBooksIssuedByStudents()
+    -> BEGIN
+    ->     SELECT s.Stud_name, COUNT(i.book_no) AS total_books_issued
+    ->     FROM Student s
+    ->     JOIN Membership m ON s.Stud_no = m.Stud_no
+    ->     JOIN Iss_rec i ON m.Mem_no = i.Mem_no
+    ->     GROUP BY s.Stud_name;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> CALL CountBooksIssuedByStudents();
++----------------+--------------------+
+| Stud_name      | total_books_issued |
++----------------+--------------------+
+| Alice Johnson  |                  1 |
+| Bob Williams   |                  1 |
+| David Martinez |                  1 |
+| Emma Brown     |                  1 |
+| James Taylor   |                  1 |
+| Jane Smith     |                  1 |
+| John Doe       |                  1 |
+| Michael Davis  |                  1 |
+| Olivia Jones   |                  1 |
+| Sarah Wilson   |                  1 |
++----------------+--------------------+
+10 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
