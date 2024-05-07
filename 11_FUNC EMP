@@ -1,3 +1,6 @@
+11. Write a function which will return no. of employees working in department, if department
+number is given as argument.
+
 mysql> CREATE DATABASE QUES11;
 Query OK, 1 row affected (0.00 sec)
 
