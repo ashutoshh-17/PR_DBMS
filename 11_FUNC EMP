@@ -29,17 +29,6 @@ mysql> INSERT INTO Employee (fname, minit, lname, ssn, bdate, address, sex, sala
 Query OK, 4 rows affected (0.00 sec)
 Records: 4  Duplicates: 0  Warnings: 0
 
-mysql> Create Department table
-    -> CREATE TABLE Department (
-    ->     dname VARCHAR(50),
-    ->     dnumber INT PRIMARY KEY,
-    ->     mgr_ssn CHAR(9),
-    ->     mgrstartdate DATE
-    -> );
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'Department table
-CREATE TABLE Department (
-    dname VARCHAR(50),
-    dnumber...' at line 1
 mysql> CREATE TABLE Department (
     ->     dname VARCHAR(50),
     ->     dnumber INT PRIMARY KEY,
