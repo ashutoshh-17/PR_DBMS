@@ -1,0 +1,133 @@
+mysql> CREATE DATABASE QUES10;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE QUES10;
+Database changed
+mysql> CREATE TABLE Employee (
+    ->     fname VARCHAR(50),
+    ->     minit CHAR,
+    ->     lname VARCHAR(50),
+    ->     ssn CHAR(9) PRIMARY KEY,
+    ->     bdate DATE,
+    ->     address VARCHAR(100),
+    ->     sex CHAR,
+    ->     salary DECIMAL(10, 2),
+    ->     super_ssn CHAR(9),
+    ->     dno INT
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Employee (fname, minit, lname, ssn, bdate, address, sex, salary, super_ssn, dno)
+    -> VALUES
+    ->     ('John', 'D', 'Doe', '123456789', '1990-05-15', '123 Main St', 'M', 50000.00, NULL, 1),
+    ->     ('Jane', 'E', 'Smith', '234567890', '1992-08-20', '456 Elm St', 'F', 60000.00, '123456789', 1),
+    ->     ('Michael', 'A', 'Johnson', '345678901', '1985-03-10', '789 Oak St', 'M', 70000.00, '123456789', 2);
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Department (
+    ->     dname VARCHAR(50),
+    ->     dnumber INT PRIMARY KEY,
+    ->     mgr_ssn CHAR(9),
+    ->     mgr_start_date DATE
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Department (dname, dnumber, mgr_ssn, mgr_start_date)
+    -> VALUES
+    ->     ('HR', 1, '123456789', '2010-01-01'),
+    ->     ('IT', 2, '345678901', '2015-06-01');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE DeptLocations (
+    ->     dnumber INT,
+    ->     dlocation VARCHAR(100),
+    ->     PRIMARY KEY (dnumber, dlocation)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO DeptLocations (dnumber, dlocation)
+    -> VALUES
+    ->     (1, 'New York'),
+    ->     (2, 'San Francisco');
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Project (
+    ->     pname VARCHAR(50),
+    ->     pnumber INT PRIMARY KEY,
+    ->     plocation VARCHAR(100),
+    ->     dnum INT
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Project (pname, pnumber, plocation, dnum)
+    -> VALUES
+    ->     ('Website Development', 1, 'New York', 1),
+    ->     ('Database Migration', 2, 'San Francisco', 2);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE WorksOn (
+    ->     essn CHAR(9),
+    ->     pno INT,
+    ->     hours DECIMAL(5, 2),
+    ->     PRIMARY KEY (essn, pno),
+    ->     FOREIGN KEY (essn) REFERENCES Employee(ssn),
+    ->     FOREIGN KEY (pno) REFERENCES Project(pnumber)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO WorksOn (essn, pno, hours)
+    -> VALUES
+    ->     ('123456789', 1, 40),
+    ->     ('234567890', 1, 35),
+    ->     ('345678901', 2, 45);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Dependent (
+    ->     essn CHAR(9),
+    ->     dependent_name VARCHAR(50),
+    ->     sex CHAR,
+    ->     bdate DATE,
+    ->     relationship VARCHAR(50),
+    ->     PRIMARY KEY (essn, dependent_name),
+    ->     FOREIGN KEY (essn) REFERENCES Employee(ssn)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Dependent (essn, dependent_name, sex, bdate, relationship)
+    -> VALUES
+    ->     ('123456789', 'Alice Doe', 'F', '2010-01-01', 'Daughter'),
+    ->     ('234567890', 'Bob Smith', 'M', '2015-05-10', 'Son');
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> DELIMITER //
+mysql>
+mysql> CREATE PROCEDURE GetDepartmentSalary(IN depNumber INT)
+    -> BEGIN
+    ->     SELECT d.dnumber, d.dname, SUM(e.salary) AS total_salary
+    ->     FROM Department d
+    ->     JOIN Employee e ON d.dnumber = e.dno
+    ->     WHERE d.dnumber = depNumber
+    ->     GROUP BY d.dnumber, d.dname;
+    -> END//
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> CALL GetDepartmentSalary(1)
+    -> ;
++---------+-------+--------------+
+| dnumber | dname | total_salary |
++---------+-------+--------------+
+|       1 | HR    |    110000.00 |
++---------+-------+--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
