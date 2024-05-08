@@ -146,3 +146,30 @@ mysql> CREATE VIEW ThursdayMachineAllotments AS
     -> JOIN Lab l ON a.mach_no = l.mach_no
     -> WHERE a.dayofweek = 'Thursday';
 Query OK, 0 rows affected (0.28 sec)
+
+mysql> SELECT * FROM StudentMachineAllotments;
++---------+-----------------+---------+--------+-----------+
+| stud_no | stud_name       | mach_no | Lab_no | dayofweek |
++---------+-----------------+---------+--------+-----------+
+|       1 | John Doe        |       1 |    101 | Monday    |
+|       2 | Jane Smith      |       3 |    103 | Tuesday   |
+|       3 | Alice Johnson   |       2 |    102 | Wednesday |
+|       4 | Bob Brown       |       4 |    104 | Thursday  |
+|       5 | Emily Davis     |       5 |    105 | Friday    |
+|       6 | Michael Wilson  |       6 |    106 | Monday    |
+|       7 | Sarah Lee       |       7 |    107 | Tuesday   |
+|       8 | David Miller    |       8 |    108 | Wednesday |
+|       9 | Olivia Martinez |       9 |    109 | Thursday  |
+|      10 | James Taylor    |      10 |    110 | Friday    |
++---------+-----------------+---------+--------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM ThursdayMachineAllotments;
++-----------------+--------+---------+
+| stud_name       | Lab_no | mach_no |
++-----------------+--------+---------+
+| Bob Brown       |    104 |       4 |
+| Olivia Martinez |    109 |       9 |
++-----------------+--------+---------+
+2 rows in set (0.00 sec)
+
