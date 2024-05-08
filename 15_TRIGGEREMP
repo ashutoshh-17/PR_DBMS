@@ -5,24 +5,22 @@ paydetails(emp_id : integer, dept_id: integer, salary: integer, DOJ: date)
 payroll(emp_id : integer, pay_date: date)
 Write a trigger which will restrict insertion of new employee record having salary less than Rs. 20000.
 
-mysql> CREATE DATABASE QUES15;
-Query OK, 1 row affected (0.00 sec)
-
 mysql> USE QUES15;
 Database changed
 mysql> CREATE TABLE employee (
     ->     emp_id INTEGER PRIMARY KEY,
     ->     emp_name VARCHAR(50) NOT NULL
     -> );
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.20 sec)
 
-mysql>
+mysql> 
 mysql> CREATE TABLE department (
     ->     dept_id INTEGER PRIMARY KEY,
     ->     dept_name VARCHAR(50) NOT NULL
     -> );
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.04 sec)
 
+mysql> 
 mysql> CREATE TABLE paydetails (
     ->     emp_id INTEGER,
     ->     dept_id INTEGER,
@@ -32,15 +30,16 @@ mysql> CREATE TABLE paydetails (
     ->     FOREIGN KEY (dept_id) REFERENCES department(dept_id),
     ->     PRIMARY KEY (emp_id, dept_id)
     -> );
-Query OK, 0 rows affected (0.02 sec)
+Query OK, 0 rows affected (0.06 sec)
 
+mysql> 
 mysql> CREATE TABLE payroll (
     ->     emp_id INTEGER,
     ->     pay_date DATE,
     ->     FOREIGN KEY (emp_id) REFERENCES employee(emp_id),
     ->     PRIMARY KEY (emp_id, pay_date)
     -> );
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.06 sec)
 
 mysql> INSERT INTO employee VALUES
     -> (1, 'John Doe'),
@@ -53,9 +52,10 @@ mysql> INSERT INTO employee VALUES
     -> (8, 'Rachel Taylor'),
     -> (9, 'Daniel Martinez'),
     -> (10, 'Amanda Anderson');
-Query OK, 10 rows affected (0.00 sec)
+Query OK, 10 rows affected (0.10 sec)
 Records: 10  Duplicates: 0  Warnings: 0
 
+mysql> 
 mysql> INSERT INTO department VALUES
     -> (1, 'HR'),
     -> (2, 'Finance'),
@@ -70,6 +70,7 @@ mysql> INSERT INTO department VALUES
 Query OK, 10 rows affected (0.01 sec)
 Records: 10  Duplicates: 0  Warnings: 0
 
+mysql> 
 mysql> INSERT INTO paydetails VALUES
     -> (1, 1, 25000, '2023-01-15'),
     -> (2, 2, 28000, '2022-11-20'),
@@ -84,6 +85,7 @@ mysql> INSERT INTO paydetails VALUES
 Query OK, 10 rows affected (0.01 sec)
 Records: 10  Duplicates: 0  Warnings: 0
 
+mysql> 
 mysql> INSERT INTO payroll VALUES
     -> (1, '2024-04-30'),
     -> (2, '2024-04-30'),
@@ -95,21 +97,25 @@ mysql> INSERT INTO payroll VALUES
     -> (8, '2024-04-30'),
     -> (9, '2024-04-30'),
     -> (10, '2024-04-30');
-Query OK, 10 rows affected (0.00 sec)
+Query OK, 10 rows affected (0.01 sec)
 Records: 10  Duplicates: 0  Warnings: 0
 
 mysql> DELIMITER //
-mysql>
+mysql> 
 mysql> CREATE TRIGGER check_salary_trigger
     -> BEFORE INSERT ON paydetails
     -> FOR EACH ROW
     -> BEGIN
-    ->     IF NOT check_salary() THEN
+    ->     IF NEW.salary < 20000 THEN
     ->         SIGNAL SQLSTATE '45000'
     ->         SET MESSAGE_TEXT = 'Salary cannot be less than Rs. 20000';
     ->     END IF;
     -> END;
     -> //
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.12 sec)
 
-mysql> DELIMITER;
+mysql> 
+mysql> DELIMITER ;
+mysql> 
+mysql> INSERT INTO paydetails (emp_id, dept_id, salary, DOJ) VALUES (11, 1, 18000, '2024-05-08');
+ERROR 1644 (45000): Salary cannot be less than Rs. 20000
