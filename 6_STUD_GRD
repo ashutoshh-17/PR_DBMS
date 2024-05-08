@@ -1,35 +1,44 @@
 6. Create table to store student details like roll no, name, marks of 5 different subjects. Write
 stored function which will take student roll no as input and will calculate grade of that student.
 
-mysql> CREATE DATABASE stud_grade;
-Query OK, 1 row affected (0.29 sec)
+mysql> CREATE DATABASE QUES6;
+Query OK, 1 row affected (0.10 sec)
 
-mysql> use stud_grade;
+mysql> USE QUES6;
 Database changed
-
-mysql> CREATE TABLE StudentDetails (
-    ->     RollNo INT PRIMARY KEY,
-    ->     Name VARCHAR(50),
-    ->     Subject1Marks INT,
-    ->     Subject2Marks INT,
-    ->     Subject3Marks INT,
-    ->     Subject4Marks INT,
-    ->     Subject5Marks INT
+mysql> CREATE TABLE student_details (
+    ->     roll_no INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     subject1 INT,
+    ->     subject2 INT,
+    ->     subject3 INT,
+    ->     subject4 INT,
+    ->     subject5 INT
     -> );
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> INSERT INTO student_details (roll_no, name, subject1, subject2, subject3, subject4, subject5)
+    -> VALUES
+    ->     (1, 'John', 80, 75, 85, 90, 88),
+    ->     (2, 'Alice', 70, 65, 75, 80, 78),
+    ->     (3, 'Bob', 85, 90, 88, 92, 87);
+Query OK, 3 rows affected (0.10 sec)
+Records: 3  Duplicates: 0  Warnings: 0
 
 mysql> DELIMITER //
-mysql> CREATE FUNCTION CalculateGrade(student_roll_no INT)
-    -> RETURNS CHAR(1)
+mysql> CREATE FUNCTION calculate_grade(student_roll INT) RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> READS SQL DATA
     -> BEGIN
-    ->     DECLARE avg_marks DECIMAL(5,2);
-    ->     DECLARE grade CHAR(1);
-    ->
-    ->     SELECT (Subject1Marks + Subject2Marks + Subject3Marks + Subject4Marks + Subject5Marks) / 5
-    ->     INTO avg_marks
-    ->     FROM StudentDetails
-    ->     WHERE RollNo = student_roll_no;
-    ->
+    ->     DECLARE avg_marks FLOAT;
+    ->     DECLARE grade VARCHAR(10);
+    ->     
+    ->     -- Calculate average marks
+    ->     SELECT AVG((subject1 + subject2 + subject3 + subject4 + subject5) / 5) INTO avg_marks
+    ->     FROM student_details
+    ->     WHERE roll_no = student_roll;
+    ->     
+    ->     -- Assign grade based on average marks
     ->     IF avg_marks >= 90 THEN
     ->         SET grade = 'A';
     ->     ELSEIF avg_marks >= 80 THEN
@@ -41,9 +50,17 @@ mysql> CREATE FUNCTION CalculateGrade(student_roll_no INT)
     ->     ELSE
     ->         SET grade = 'F';
     ->     END IF;
-    ->
+    ->     
     ->     RETURN grade;
     -> END //
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.16 sec)
 
 mysql> DELIMITER ;
+mysql> SELECT calculate_grade(1); 
++--------------------+
+| calculate_grade(1) |
++--------------------+
+| B                  |
++--------------------+
+1 row in set (0.45 sec)
+
