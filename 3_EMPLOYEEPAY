@@ -161,3 +161,21 @@ mysql> CREATE VIEW employee_net_salary_view AS
     -> FROM employee
     -> INNER JOIN paydetails ON employee.emp_id = paydetails.emp_id;
 Query OK, 0 rows affected (0.17 sec)
+
+mysql> SELECT * FROM employee_net_salary_view;
++-----------------+------------+
+| emp_name        | net_salary |
++-----------------+------------+
+| John Doe        |      14000 |
+| Jane Smith      |      16700 |
+| Alice Johnson   |      20500 |
+| Bob Williams    |      15900 |
+| Emily Brown     |      17500 |
+| Michael Davis   |      18400 |
+| Sarah Wilson    |      14700 |
+| David Martinez  |      23300 |
+| Jennifer Taylor |      12900 |
+| James Anderson  |      19600 |
++-----------------+------------+
+10 rows in set (0.00 sec)
+
