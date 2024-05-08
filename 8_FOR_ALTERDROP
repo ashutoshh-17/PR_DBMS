@@ -1,29 +1,47 @@
 8. Design and implement a database with primary key and foreign key constraints. Perform:
 a) Alter table with add and modify b) Drop table
 
-mysql> CREATE DATABASE for_alt_dr;
-Query OK, 1 row affected (0.16 sec)
+mysql> CREATE DATABASE QUES8;
+Query OK, 1 row affected (0.36 sec)
 
-mysql> use for_alt_dr
+mysql> USE QUES8;
 Database changed
-mysql> CREATE TABLE Authors (AuthorID INT PRIMARY KEY, AuthorName VARCHAR(100));
-Query OK, 0 rows affected (0.53 sec)
+mysql> CREATE TABLE Department (
+    ->     department_id INT PRIMARY KEY,
+    ->     department_name VARCHAR(255)
+    -> );
+Query OK, 0 rows affected (0.16 sec)
 
-mysql> CREATE TABLE Books (BookID INT PRIMARY KEY, Title VARCHAR(100), AuthorID INT, FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID));
-Query OK, 0 rows affected (1.54 sec)
+mysql> CREATE TABLE Employee (
+    ->     employee_id INT PRIMARY KEY,
+    ->     employee_name VARCHAR(255),
+    ->     department_id INT,
+    ->     FOREIGN KEY (department_id) REFERENCES Department(department_id)
+    -> );
+Query OK, 0 rows affected (0.89 sec)
 
-mysql> ALTER TABLE Books
-    -> ADD PublicationYear INT;
-Query OK, 0 rows affected (1.06 sec)
+mysql> INSERT INTO Department (department_id, department_name)
+    -> VALUES (1, 'Engineering'),
+    ->        (2, 'Marketing');
+Query OK, 2 rows affected (0.11 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Employee (employee_id, employee_name, department_id)
+    -> VALUES (1, 'John Doe', 1),
+    ->        (2, 'Jane Smith', 2);
+Query OK, 2 rows affected (0.10 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE Employee
+    -> ADD COLUMN salary DECIMAL(10,2);
+Query OK, 0 rows affected (0.13 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 
-mysql> ALTER TABLE Authors
-    -> MODIFY COLUMN AuthorName VARCHAR(150);
-Query OK, 0 rows affected (0.24 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+mysql> ALTER TABLE Employee
+    -> MODIFY COLUMN employee_name VARCHAR(100);
+Query OK, 2 rows affected (0.20 sec)
+Records: 2  Duplicates: 0  Warnings: 0
 
-mysql> DROP TABLE Books;
-Query OK, 0 rows affected (0.45 sec)
-
-mysql> DROP TABLE Authors;
-Query OK, 0 rows affected (0.41 sec)
+mysql> 
+mysql> DROP TABLE Employee;
+Query OK, 0 rows affected (0.03 sec)
