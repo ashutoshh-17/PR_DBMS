@@ -1,35 +1,56 @@
 7. Design and implement a database using DDL statements and apply normalization on them.
 
-CREATE TABLE Books (
-    ISBN VARCHAR(20) PRIMARY KEY,
-    Title VARCHAR(100),
-    Author_ID INT,
-    Publisher_ID INT,
-    Genre VARCHAR(50),
-    Publication_Year INT,
-    FOREIGN KEY (Author_ID) REFERENCES Authors(Author_ID),
-    FOREIGN KEY (Publisher_ID) REFERENCES Publishers(Publisher_ID)
-);
+mysql> CREATE DATABASE QUES7;
+Query OK, 1 row affected (0.10 sec)
 
-CREATE TABLE Authors (
-    Author_ID INT PRIMARY KEY,
-    Author_Name VARCHAR(100)
-);
+mysql> USE QUES7;
+Database changed
+mysql> CREATE TABLE Authors (
+    ->     author_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     author_name VARCHAR(100) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.13 sec)
 
+mysql> 
+mysql> CREATE TABLE Books (
+    ->     book_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     title VARCHAR(255) NOT NULL,
+    ->     author_id INT,
+    ->     genre VARCHAR(50),
+    ->     publication_year INT,
+    ->     FOREIGN KEY (author_id) REFERENCES Authors(author_id)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
 
-CREATE TABLE Publishers (
-    Publisher_ID INT PRIMARY KEY,
-    Publisher_Name VARCHAR(100)
-);
+mysql> INSERT INTO Authors (author_name) VALUES ('J.K. Rowling');
+Query OK, 1 row affected (0.11 sec)
 
+mysql> INSERT INTO Authors (author_name) VALUES ('George Orwell');
+Query OK, 1 row affected (0.02 sec)
 
-CREATE TABLE Members (
-    Member_ID INT PRIMARY KEY,
-    Member_Name VARCHAR(100),
-    Email VARCHAR(100),
-    Phone_Number VARCHAR(20)
-);
+mysql> INSERT INTO Authors (author_name) VALUES ('Harper Lee');
+Query OK, 1 row affected (0.01 sec)
 
+mysql> INSERT INTO Books (title, author_id, genre, publication_year) VALUES ('Harry Potter and the Philosopher''s Stone', 1, 'Fantasy', 1997);
+Query OK, 1 row affected (0.34 sec)
+
+mysql> INSERT INTO Books (title, author_id, genre, publication_year) VALUES ('1984', 2, 'Dystopian Fiction', 1949);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO Books (title, author_id, genre, publication_year) VALUES ('To Kill a Mockingbird', 3, 'Southern Gothic', 1960);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT Books.title, Authors.author_name
+    -> FROM Books
+    -> JOIN Authors ON Books.author_id = Authors.author_id;
++------------------------------------------+---------------+
+| title                                    | author_name   |
++------------------------------------------+---------------+
+| Harry Potter and the Philosopher's Stone | J.K. Rowling  |
+| 1984                                     | George Orwell |
+| To Kill a Mockingbird                    | Harper Lee    |
++------------------------------------------+---------------+
+3 rows in set (0.00 sec)
 
 /*DONT RUN THIS:
 
