@@ -2,31 +2,34 @@
 • Pattern matching
 • Arithmetic operations and built in functions
 
-mysql> CREATE DATABASE college;
-Query OK, 1 row affected (0.12 sec)
-
-mysql> use college;
+mysql> USE QUES9;
 Database changed
-mysql> CREATE TABLE STUDENT(ROLL_NO INT, NAME VARCHAR(20), MARKS INT);
-Query OK, 0 rows affected (0.40 sec)
+mysql> CREATE TABLE STUDENT(ROLL_NO INT , NAME VARCHAR(20) , MARKS INT);
+Query OK, 0 rows affected (0.21 sec)
 
-mysql> INSERT INTO STUDENT VALUES(1, 'VIVEK', 75);
-Query OK, 1 row affected (0.12 sec)
+mysql> 
+mysql> INSERT INTO STUDENT VALUES(1 , 'VIVEK' , 75);
+Query OK, 1 row affected (0.02 sec)
 
-mysql> INSERT INTO STUDENT VALUES(2, 'ASHUTOSH', 80);
-Query OK, 1 row affected (0.09 sec)
+mysql> 
+mysql> INSERT INTO STUDENT VALUES(2 , 'ASHUTOSH' , 80);
+Query OK, 1 row affected (0.00 sec)
 
-mysql> INSERT INTO STUDENT VALUES(3, 'TUSHAR', 77);
-Query OK, 1 row affected (0.12 sec)
+mysql> 
+mysql> INSERT INTO STUDENT VALUES(3 , 'TUSHAR' , 77);
+Query OK, 1 row affected (0.01 sec)
 
-mysql> INSERT INTO STUDENT VALUES(4, 'SHASHWAT', 74);
-Query OK, 1 row affected (0.10 sec)
+mysql> 
+mysql> INSERT INTO STUDENT VALUES(4 , 'SHASHWAT' , 74);
+Query OK, 1 row affected (0.01 sec)
 
+mysql> 
 mysql> ALTER TABLE STUDENT ADD PRIMARY KEY(ROLL_NO);
-Query OK, 0 rows affected (1.56 sec)
+Query OK, 0 rows affected (0.09 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 
 mysql> /*Pattern Matching*/
+
 mysql> SELECT * FROM STUDENT;
 +---------+----------+-------+
 | ROLL_NO | NAME     | MARKS |
@@ -38,6 +41,7 @@ mysql> SELECT * FROM STUDENT;
 +---------+----------+-------+
 4 rows in set (0.00 sec)
 
+mysql> 
 mysql> SELECT * FROM STUDENT WHERE ROLL_NO IN(1,4);
 +---------+----------+-------+
 | ROLL_NO | NAME     | MARKS |
@@ -47,6 +51,7 @@ mysql> SELECT * FROM STUDENT WHERE ROLL_NO IN(1,4);
 +---------+----------+-------+
 2 rows in set (0.00 sec)
 
+mysql> 
 mysql> SELECT * FROM STUDENT WHERE NAME LIKE 'V%';
 +---------+-------+-------+
 | ROLL_NO | NAME  | MARKS |
@@ -55,6 +60,7 @@ mysql> SELECT * FROM STUDENT WHERE NAME LIKE 'V%';
 +---------+-------+-------+
 1 row in set (0.00 sec)
 
+mysql> 
 mysql> SELECT ROLL_NO FROM STUDENT GROUP BY ROLL_NO;
 +---------+
 | ROLL_NO |
@@ -66,6 +72,7 @@ mysql> SELECT ROLL_NO FROM STUDENT GROUP BY ROLL_NO;
 +---------+
 4 rows in set (0.00 sec)
 
+mysql> 
 mysql> SELECT  NAME, MARKS FROM STUDENT GROUP BY NAME, MARKS HAVING MARKS<90;
 +----------+-------+
 | NAME     | MARKS |
@@ -77,6 +84,7 @@ mysql> SELECT  NAME, MARKS FROM STUDENT GROUP BY NAME, MARKS HAVING MARKS<90;
 +----------+-------+
 4 rows in set (0.00 sec)
 
+mysql> 
 mysql> SELECT * FROM STUDENT ORDER BY NAME;
 +---------+----------+-------+
 | ROLL_NO | NAME     | MARKS |
@@ -88,6 +96,7 @@ mysql> SELECT * FROM STUDENT ORDER BY NAME;
 +---------+----------+-------+
 4 rows in set (0.00 sec)
 
+mysql> 
 mysql> SELECT * FROM STUDENT ORDER BY NAME DESC;
 +---------+----------+-------+
 | ROLL_NO | NAME     | MARKS |
@@ -100,21 +109,22 @@ mysql> SELECT * FROM STUDENT ORDER BY NAME DESC;
 4 rows in set (0.00 sec)
 
 mysql> CREATE TABLE STUDENT2(ROLL_NO INT PRIMARY KEY , NAME VARCHAR(30) ,MARKS INT, DOB DATE  );
-Query OK, 0 rows affected (0.53 sec)
+Query OK, 0 rows affected (0.15 sec)
 
+mysql> 
 mysql> INSERT INTO STUDENT2 VALUES(91 , 'RAM' , 90 , '2005-01-01'  );
-INSERT INTO STUDENT2 VALUES(92 , 'SHAM' ,91, '2005-02-02'  );
-INSERT INTO STUDENT2 VALUES(93 , 'KARAN' ,92, '2005-03-03' );
-INSERT INTO STUDENT2 VALUES(94 , 'ARJUN' , 93 ,'2005-04-04' );
+Query OK, 1 row affected (0.00 sec)
 
-Query OK, 1 row affected (0.14 sec)
+mysql> INSERT INTO STUDENT2 VALUES(92 , 'SHAM' ,91, '2005-02-02'  );
+Query OK, 1 row affected (0.02 sec)
 
-Query OK, 1 row affected (0.13 sec)
+mysql> INSERT INTO STUDENT2 VALUES(93 , 'KARAN' ,92, '2005-03-03' );
+Query OK, 1 row affected (0.01 sec)
 
-Query OK, 1 row affected (0.12 sec)
+mysql> INSERT INTO STUDENT2 VALUES(94 , 'ARJUN' , 93 ,'2005-04-04' );
+Query OK, 1 row affected (0.01 sec)
 
-Query OK, 1 row affected (0.04 sec)
-
+mysql> 
 mysql> SELECT * FROM STUDENT2;
 +---------+-------+-------+------------+
 | ROLL_NO | NAME  | MARKS | DOB        |
@@ -126,9 +136,12 @@ mysql> SELECT * FROM STUDENT2;
 +---------+-------+-------+------------+
 4 rows in set (0.00 sec)
 
-
-mysql> ALTER TABLE STUDENT2 DROP COLUMN DOB;
-Query OK, 0 rows affected (0.39 sec)
+mysql> 
+mysql> SELECT * FROM STUDENT UNION SELECT * FROM STUDENT2;
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql>  ALTER TABLE STUDENT2
+    -> DROP COLUMN  DOB;
+Query OK, 0 rows affected (0.05 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 
 mysql> SELECT * FROM STUDENT UNION SELECT * FROM STUDENT2;
@@ -144,9 +157,10 @@ mysql> SELECT * FROM STUDENT UNION SELECT * FROM STUDENT2;
 |      93 | KARAN    |    92 |
 |      94 | ARJUN    |    93 |
 +---------+----------+-------+
-8 rows in set (0.02 sec)
+8 rows in set (0.00 sec)
 
 mysql> /*ARITHMETIC OPERATIONS*/
+
 mysql> SELECT * FROM STUDENT;
 +---------+----------+-------+
 | ROLL_NO | NAME     | MARKS |
@@ -158,14 +172,17 @@ mysql> SELECT * FROM STUDENT;
 +---------+----------+-------+
 4 rows in set (0.00 sec)
 
+mysql> 
 mysql> UPDATE STUDENT SET MARKS = MARKS + 20 WHERE ROLL_NO = 1;
-Query OK, 1 row affected (0.09 sec)
+Query OK, 1 row affected (0.34 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 
+mysql> 
 mysql> UPDATE STUDENT SET MARKS = MARKS + 25 WHERE ROLL_NO = 2;
-Query OK, 1 row affected (0.12 sec)
+Query OK, 1 row affected (0.01 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 
+mysql> 
 mysql> SELECT * FROM STUDENT;
 +---------+----------+-------+
 | ROLL_NO | NAME     | MARKS |
