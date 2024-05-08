@@ -6,7 +6,7 @@ Iss_rec(iss_no:integer, iss_date: date, Mem_no: integer, book_no: integer)
 Write a trigger to update quantity of book if that book is issued to student.
 
 mysql> CREATE DATABASE QUES14;
-Query OK, 1 row affected (0.00 sec)
+Query OK, 1 row affected (0.11 sec)
 
 mysql> USE QUES14;
 Database changed
@@ -14,25 +14,24 @@ mysql> CREATE TABLE Student (
     ->     Stud_no INTEGER PRIMARY KEY,
     ->     Stud_name VARCHAR(50) NOT NULL
     -> );
-Query OK, 0 rows affected (0.01 sec)
 
-mysql>
+Query OK, 0 rows affected (0.63 sec)
+
 mysql> CREATE TABLE Membership (
     ->     Mem_no INTEGER PRIMARY KEY,
     ->     Stud_no INTEGER,
     ->     FOREIGN KEY (Stud_no) REFERENCES Student(Stud_no)
     -> );
-Query OK, 0 rows affected (0.02 sec)
+Query OK, 0 rows affected (0.05 sec)
 
-mysql>
 mysql> CREATE TABLE Book (
     ->     Book_no INTEGER PRIMARY KEY,
     ->     Book_name VARCHAR(100) NOT NULL,
-    ->     Author VARCHAR(50) NOT NULL
+    ->     Author VARCHAR(50) NOT NULL,
+    ->     Quantity INTEGER
     -> );
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.04 sec)
 
-mysql>
 mysql> CREATE TABLE Iss_rec (
     ->     Iss_no INTEGER PRIMARY KEY,
     ->     Iss_date DATE NOT NULL,
@@ -41,7 +40,7 @@ mysql> CREATE TABLE Iss_rec (
     ->     FOREIGN KEY (Mem_no) REFERENCES Membership(Mem_no),
     ->     FOREIGN KEY (Book_no) REFERENCES Book(Book_no)
     -> );
-Query OK, 0 rows affected (0.02 sec)
+Query OK, 0 rows affected (0.07 sec)
 
 mysql> INSERT INTO Student (Stud_no, Stud_name) VALUES
     -> (1, 'Alice'),
@@ -49,41 +48,38 @@ mysql> INSERT INTO Student (Stud_no, Stud_name) VALUES
     -> (3, 'Charlie'),
     -> (4, 'David'),
     -> (5, 'Emma');
-Query OK, 5 rows affected (0.00 sec)
+Query OK, 5 rows affected (0.10 sec)
 Records: 5  Duplicates: 0  Warnings: 0
 
-mysql>
 mysql> INSERT INTO Membership (Mem_no, Stud_no) VALUES
     -> (101, 1),
     -> (102, 2),
     -> (103, 3),
     -> (104, 4),
     -> (105, 5);
-Query OK, 5 rows affected (0.00 sec)
+Query OK, 5 rows affected (0.01 sec)
 Records: 5  Duplicates: 0  Warnings: 0
 
-mysql>
-mysql> INSERT INTO Book (Book_no, Book_name, Author) VALUES
-    -> (201, 'To Kill a Mockingbird', 'Harper Lee'),
-    -> (202, '1984', 'George Orwell'),
-    -> (203, 'The Great Gatsby', 'F. Scott Fitzgerald'),
-    -> (204, 'Pride and Prejudice', 'Jane Austen'),
-    -> (205, 'The Catcher in the Rye', 'J.D. Salinger');
-Query OK, 5 rows affected (0.00 sec)
+mysql> INSERT INTO Book (Book_no, Book_name, Author, Quantity) VALUES
+    -> (201, 'To Kill a Mockingbird', 'Harper Lee', 2),
+    -> (202, '1984', 'George Orwell', 3),
+    -> (203, 'The Great Gatsby', 'F. Scott Fitzgerald', 4),
+    -> (204, 'Pride and Prejudice', 'Jane Austen', 5),
+    -> (205, 'The Catcher in the Rye', 'J.D. Salinger', 6);
+Query OK, 5 rows affected (0.02 sec)
 Records: 5  Duplicates: 0  Warnings: 0
 
-mysql>
 mysql> INSERT INTO Iss_rec (Iss_no, Iss_date, Mem_no, Book_no) VALUES
     -> (301, '2024-05-01', 101, 201),
     -> (302, '2024-05-02', 102, 202),
     -> (303, '2024-05-03', 103, 203),
     -> (304, '2024-05-04', 104, 204),
     -> (305, '2024-05-05', 105, 205);
-Query OK, 5 rows affected (0.00 sec)
+Query OK, 5 rows affected (0.01 sec)
 Records: 5  Duplicates: 0  Warnings: 0
 
 mysql> DELIMITER //
-mysql>
+
 mysql> CREATE TRIGGER book_issued_trigger
     -> AFTER INSERT ON Iss_rec
     -> FOR EACH ROW
@@ -92,8 +88,42 @@ mysql> CREATE TRIGGER book_issued_trigger
     ->     SET quantity = quantity - 1
     ->     WHERE Book_no = NEW.Book_no;
     -> END//
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.11 sec)
 
-mysql>
 mysql> DELIMITER ;
-mysql>
+
+mysql> SELECT * FROM Book;
++---------+------------------------+---------------------+----------+
+| Book_no | Book_name              | Author              | Quantity |
++---------+------------------------+---------------------+----------+
+|     201 | To Kill a Mockingbird  | Harper Lee          |        2 |
+|     202 | 1984                   | George Orwell       |        3 |
+|     203 | The Great Gatsby       | F. Scott Fitzgerald |        4 |
+|     204 | Pride and Prejudice    | Jane Austen         |        5 |
+|     205 | The Catcher in the Rye | J.D. Salinger       |        6 |
++---------+------------------------+---------------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO Iss_rec (Iss_no, Iss_date, Mem_no, Book_no) VALUES
+    -> (306, '2024-05-06', 101, 201);
+Query OK, 1 row affected (0.36 sec)
+
+mysql> SELECT Quantity FROM Book WHERE Book_no = 201;
++----------+
+| Quantity |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Book;
++---------+------------------------+---------------------+----------+
+| Book_no | Book_name              | Author              | Quantity |
++---------+------------------------+---------------------+----------+
+|     201 | To Kill a Mockingbird  | Harper Lee          |        1 |
+|     202 | 1984                   | George Orwell       |        3 |
+|     203 | The Great Gatsby       | F. Scott Fitzgerald |        4 |
+|     204 | Pride and Prejudice    | Jane Austen         |        5 |
+|     205 | The Catcher in the Rye | J.D. Salinger       |        6 |
++---------+------------------------+---------------------+----------+
+5 rows in set (0.00 sec)
