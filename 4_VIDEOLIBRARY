@@ -174,3 +174,13 @@ mysql> CREATE VIEW weekly_issue_view AS
     -> INNER JOIN Cassette cas ON ir.cass_no = cas.cass_no
     -> WHERE ir.iss_date >= CURDATE() - INTERVAL 7 DAY;
 Query OK, 0 rows affected (0.21 sec)
+
+mysql> SELECT * FROM weekly_issue_view;
++------------+-----------------+---------------------+
+| iss_date   | cust_name       | cass_name           |
++------------+-----------------+---------------------+
+| 2024-05-09 | Jennifer Taylor | Drama Queen         |
+| 2024-05-10 | James Anderson  | Documentary Journey |
++------------+-----------------+---------------------+
+2 rows in set (0.00 sec)
+
