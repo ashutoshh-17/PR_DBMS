@@ -151,3 +151,6 @@ Query OK, 0 rows affected (0.22 sec)
 
 mysql> SELECT * FROM Last_Week_Issues;
 
+
+mysql> SELECT * FROM Last_Week_Issues;
+
