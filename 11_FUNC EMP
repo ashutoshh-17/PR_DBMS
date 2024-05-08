@@ -111,6 +111,7 @@ Records: 2  Duplicates: 0  Warnings: 0
 mysql> DELIMITER //
 mysql> CREATE FUNCTION GetEmployeesInDepartment(department_number INT)
     -> RETURNS INT
+    -> DETERMINISTIC
     -> BEGIN
     ->     DECLARE employee_count INT;
     ->
