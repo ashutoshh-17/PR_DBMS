@@ -148,3 +148,6 @@ mysql> CREATE VIEW Last_Week_Issues AS
     -> FROM Iss_rec i
     -> WHERE i.iss_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND CURDATE();
 Query OK, 0 rows affected (0.22 sec)
+
+mysql> SELECT * FROM Last_Week_Issues;
+
